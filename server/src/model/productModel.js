@@ -22,9 +22,9 @@ const productSchema = new Schema({
     },
     category: {
         type: String,
-        required: true,
         minlength: 2,
         ref: 'Category',
+        required: true,
     },
     variants: {
         type: String,
