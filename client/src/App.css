@@ -1,0 +1,24 @@
+.nav {
+  background-color: #706161;
+  padding: 1rem;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  display: flex;
+  flex-direction: row;
+}
+
+.nav_link {
+  color: #fff;
+  text-decoration: none;
+}
+
+.nav_link:hover {
+  color: #e4641a;
+  text-decoration: underline;
+}
+
+.blog-img {
+  width: 15rem;
+  height: 15rem;
+}
