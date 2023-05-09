@@ -28,8 +28,11 @@ app.use("/api/users", usersRouter);
 const adminRouter = require("./routes/admin.js")
 app.use("/api/admin", adminRouter);
 
-const productRouter = require("./routes/productRoutes");
+const productRouter = require("./routes/productRoutes.js");
 app.use("/api/products", productRouter);
+
+const categoryRouter = require("./routes/category");
+app.use("/api/categories", categoryRouter);
 
 //server working
 app.get("/test-api", (req, res) => {
