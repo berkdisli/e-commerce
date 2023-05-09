@@ -26,16 +26,25 @@ const productSchema = new Schema({
         ref: 'Category',
         required: true,
     },
-    variants: {
-        type: String,
-    },
-    sizes: {
+    inStock: {
         type: Number,
+        default: 0,
+        min: 0,
+        required: true,
+    },
+    sold: {
+        type: Number,
+        default: 0,
+        required: true,
+    },
+    size: {
+        type: String,
+        enum: ['XSmall', 'Small', 'Medium', 'Large', 'XLarge'],
+        required: false,
     },
     image: {
         type: String,
         default: "../../public/images/1681998504104-portfolio.png",
-        required: true
     },
 },
     { timestamps: true }
