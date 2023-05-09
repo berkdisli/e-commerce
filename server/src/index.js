@@ -28,6 +28,9 @@ app.use("/api/users", usersRouter);
 const adminRouter = require("./routes/admin.js")
 app.use("/api/admin", adminRouter);
 
+const productRouter = require("./routes/productRoutes");
+app.use("/api/products", productRouter);
+
 //server working
 app.get("/test-api", (req, res) => {
   res.status(200).json({ message: "api is working fine" });
