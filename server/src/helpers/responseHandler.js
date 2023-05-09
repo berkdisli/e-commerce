@@ -1,14 +1,16 @@
-exports.errorResponse = (res, statusCode, message) => {
-    return res.status(statusCode).json({
+exports.errorResponse = (res,
+    { statusCode = 400, message = 'Something is wrong for your request' }) => {
+    return res.status(statusCode).send({
         success: false,
         message: message
     })
-}
+};
 
-exports.successResponse = (res, statusCode, message, data = {}) => {
-    return res.status(statusCode).json({
+exports.successResponse = (res,
+    { statusCode = 200, message = 'Successfull', payload = {} }) => {
+    return res.status(statusCode).send({
         success: true,
-        message: message,
-        data: data,
+        message,
+        payload
     })
-}
+};
