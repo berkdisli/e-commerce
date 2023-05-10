@@ -123,13 +123,28 @@ const loginUser = async (req, res) => {
             throw createError(400, "Bad Request: invalid email or password");
 
         if (user.isBanned)
-            throw createError(204, "You have no permission, please contact the authority");
+            throw createError(403, "You have no permission, please contact the authority");
 
-        if (user.is_verified === 0) {
-            throw createError(401, "Unauthorized: please confirm your email first")
+        const jwtAuthorizationKey = dev.app.jwtAuthorizationKey
+        const accessToken = jwt.sign(
+            { _id: user._id },
+            (jwtAuthorizationKey),
+            {
+                expiresIn: '15m',
+            }
+        )
+
+        // reset the token if there's a cookie already
+        if (req.cookies[`${accessToken}`]) {
+            return (req.cookies[`${accessToken}`] = '')
         }
-        //creating session => cookie
-        req.session.userId = user._id;
+
+        // Set a cookie containing the refresh token
+        res.cookie('accessToken', accessToken, {
+            expires: new Date(Date.now() + 1000 * 60 * 15), // 15 min
+            httpOnly: true,
+            secure: false,
+        })
 
         res.status(200).json({ message: `Welcome, ${user.name}!` });
     } catch (error) {

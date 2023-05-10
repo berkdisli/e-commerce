@@ -7,7 +7,7 @@ const ALLOWED_FILE_TYPES = process.env.ALLOWED_FILE_TYPES || [
     'jpeg',
     'png',
 ];
-const UPLOAD_DIR = process.env.UPLOAD_DIR || 'public/blog';
+const UPLOAD_DIR = process.env.UPLOAD_DIR || 'public/users';
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {

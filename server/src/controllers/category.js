@@ -22,4 +22,18 @@ const createCategory = async (req, res, next) => {
     }
 }
 
-module.exports = { createCategory }
+const getAllCategories = async (req, res, next) => {
+    try {
+        const categories = await Category.find({});
+
+        return successResponse(res, {
+            statusCode: 201,
+            message: 'Categories were returned successfully',
+            payload: { categories }
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
+module.exports = { createCategory, getAllCategories }
