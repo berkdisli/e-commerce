@@ -2,29 +2,21 @@ const express = require("express");
 
 const { getAllProducts, getSingleProduct, createProduct, updateProduct, deleteProduct } = require("../controllers/productControllers");
 const { isLoggedIn } = require("../middlewares/auth");
-const upload = require("../middlewares/upload")
-const dev = require("../config");
-const session = require("express-session");
+const isAdmin = require("../middlewares/isAdmin");
+const upload = require("../middlewares/upload");
+const runValidation = require("../middlewares/validators");
+const { validateCategory } = require("../middlewares/validators/categoryValidator");
 
 const productRouter = express.Router();
 
-productRouter.use(
-    session({
-        name: "ecommerce_session",
-        secret: dev.app.sessionSecretKey,
-        resave: false,
-        saveUninitialized: true,
-        cookie: { secure: false, maxAge: 60000 }
-    })
-)
-
 productRouter.route("/")
-    .get(isLoggedIn, getAllProducts)
-    .post(isLoggedIn, upload.single("image"), createProduct);
+    .get(isLoggedIn, isAdmin, getAllProducts)
+    .post(validateCategory, runValidation, isLoggedIn, isAdmin, createProduct);
 
-productRouter.route("/:id")
-    .get(isLoggedIn, getSingleProduct)
-    .put(isLoggedIn, upload.single("image"), updateProduct)
-    .delete(isLoggedIn, deleteProduct);
+productRouter.route("/:slug")
+    .get(validateCategory, runValidation, isLoggedIn, isAdmin, getSingleProduct)
+    .put(validateCategory, runValidation, isLoggedIn, isAdmin, updateProduct)
+    .delete(validateCategory, runValidation, isLoggedIn, isAdmin, deleteProduct);
+
 
 module.exports = productRouter;
