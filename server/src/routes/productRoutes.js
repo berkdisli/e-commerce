@@ -11,11 +11,11 @@ const productRouter = express.Router();
 
 productRouter.route("/")
     .get(isLoggedIn, isAdmin, getAllProducts)
-    .post(validateCategory, runValidation, isLoggedIn, isAdmin, createProduct);
+    .post(validateCategory, runValidation, isLoggedIn, isAdmin, upload.single('image'), createProduct);
 
 productRouter.route("/:slug")
     .get(validateCategory, runValidation, isLoggedIn, isAdmin, getSingleProduct)
-    .put(validateCategory, runValidation, isLoggedIn, isAdmin, updateProduct)
+    .put(validateCategory, runValidation, isLoggedIn, isAdmin, upload.single('image'), updateProduct)
     .delete(validateCategory, runValidation, isLoggedIn, isAdmin, deleteProduct);
 
 
