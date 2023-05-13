@@ -1,6 +1,6 @@
 const express = require("express");
 const session = require("express-session");
-const { updateUser, deleteUser, registerUser, loginUser, verifyEmail, userProfile, logoutUser, forgetPassword, resetPassword, getRefreshToken } = require("../controllers/users");
+const { updateUser, deleteUser, registerUser, loginUser, verifyEmail, userProfile, logoutUser, forgetPassword, resetPassword, getRefreshToken, verifyPassword } = require("../controllers/users");
 const { isLoggedIn, isLoggedOut } = require("../middlewares/auth");
 const userRouter = express.Router();
 const dev = require("../config");
@@ -28,6 +28,7 @@ userRouter.post("/activate", verifyEmail);
 userRouter.post("/forget-password", forgetPassword);
 userRouter.post("/reset-password", resetPassword);
 userRouter.get('/refresh-token', isLoggedIn, getRefreshToken)
+userRouter.post('/verify-password', verifyPassword)
 
 
 module.exports = userRouter;

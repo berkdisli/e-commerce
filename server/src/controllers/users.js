@@ -358,4 +358,27 @@ const getRefreshToken = async (req, res, next) => {
     }
 }
 
-module.exports = { updateUser, deleteUser, registerUser, loginUser, verifyEmail, logoutUser, userProfile, forgetPassword, resetPassword, getRefreshToken }
+const verifyPassword = (req, res) => {
+    try {
+        const { token } = req.body
+        if (!token) {
+            return res.status(404).json({ message: 'Token is missing' })
+        }
+        jwt.verify(token, dev.jwtKey, async function (err, decoded) {
+            if (err) {
+                return res.status(401).json({ message: 'Token was expired' })
+            }
+            const { username, hashedPassword } = decoded
+            hashedPassword = await generateHashPassword(req.fields.password)
+            const updatedUser = await User.updateOne({ username }, { $set: { password: hashedPassword } })
+            if (!updatedUser) {
+                throw createError(401, 'password could not be changed')
+            }
+            successResponse(200, 'password has been changed successfully')
+        });
+    } catch (e) {
+        res.status(500).json({ message: e.message })
+    }
+}
+
+module.exports = { updateUser, deleteUser, registerUser, loginUser, verifyEmail, logoutUser, userProfile, forgetPassword, resetPassword, getRefreshToken, verifyPassword }
