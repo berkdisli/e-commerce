@@ -57,12 +57,12 @@ export const getAllUsers = async () => {
     return response
 }
 
-export const updateUserByAdmin = async (user) => {
+export const updateUserByAdmin = async (id, user) => {
     const response = await axios.get(`http://localhost:8080/api/admin/dashboard/${id}`, user)
     return response
 }
 
-export const deleteUserByAdmin = async () => {
+export const deleteUserByAdmin = async (id) => {
     const response = await axios.get(`http://localhost:8080/api/admin/dashboard/${id}`)
     return response
 }
