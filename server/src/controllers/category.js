@@ -25,9 +25,11 @@ const createCategory = async (req, res, next) => {
 const getAllCategories = async (req, res, next) => {
     try {
         const categories = await Category.find({})
-        res
-            .status(201)
-            .json({ message: 'categories return successfully', category: categories })
+        return successResponse(res, {
+            statusCode: 201,
+            message: 'categories returned successfully',
+            payload: { category: categories }
+        })
     } catch (error) {
         next(error)
     }
@@ -36,13 +38,15 @@ const getAllCategories = async (req, res, next) => {
 const getSingleCategory = async (req, res, next) => {
     try {
         const { slug } = req.params
-        const Categories = await Category.findOne({ slug: slug }).select(
+        const category = await Category.findOne({ slug: slug }).select(
             'name slug'
         )
 
-        res
-            .status(201)
-            .json({ message: 'category return successfully', category: Categories })
+        return successResponse(res, {
+            statusCode: 201,
+            message: 'category returned successfully',
+            payload: { category: category }
+        })
     } catch (error) {
         next(error)
     }
