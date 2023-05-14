@@ -1,20 +1,46 @@
-import React from 'react'
-import { useLocation } from 'react-router-dom'
+import React, { useEffect, useCallback } from 'react'
+import { useLocation } from 'react-router-dom';
+import { getRefreshToken } from '../../services/UserService';
 
 const UserProfile = () => {
-    const location = useLocation()
-    const user = location.state.data;
-    const imageUrl = 'http://127.0.0.1:8080/' || 'http://localhost:8080/' + user.image.path;
+    const location = useLocation();
+    const { state } = location;
+
+    const handleRefresh = useCallback(async () => {
+        try {
+            const refreshToken = await getRefreshToken();
+            console.log(refreshToken);
+        } catch (error) {
+            console.log(error);
+        }
+
+    }, []);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            handleRefresh()
+        }, 1000 * 20);
+        return () => clearInterval(interval)
+    }, [handleRefresh])
 
     return (
         <div>
-            <h1>{user.name}</h1>
-            <h2>{user.email}</h2>
-            <h2>{user.phone}</h2>
-            <h2>{user.age}</h2>
-            <img src={imageUrl} alt="image 1" style={{ width: '300px', height: '300px' }}></img>
+            <h2>{state?.isAdmin ? 'Admin' : 'User'} Profile </h2>
+            <div>
+                {state && (
+                    <div>
+                        <h3>name:{state.name}</h3>
+                        <p>Email:{state.email}</p>
+                        <p>phone:{state.phone}</p>
+                        <p>phone:{state.age}</p>
+                        <div>
+                            <button>Update</button>
+                            <button>Delete</button>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
-    )
-}
+    );
+};
 
-export default UserProfile
+export default UserProfile;
