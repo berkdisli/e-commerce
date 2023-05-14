@@ -8,7 +8,7 @@ export const getAllProducts = async () => {
 }
 
 export const getSingleProduct = async (slug) => {
-    const response = await axios.get(`${baseURL}/api/products/`, slug)
+    const response = await axios.get(`${baseURL}/api/products/${slug}`,)
     return response
 }
 
@@ -23,7 +23,7 @@ export const updateProduct = async (product) => {
 }
 
 export const deleteProduct = async (slug) => {
-    const response = await axios.delete(`${baseURL}/api/products/`, slug)
+    const response = await axios.delete(`${baseURL}/api/products/${slug}`)
     return response
 }
 

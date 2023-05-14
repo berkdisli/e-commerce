@@ -11,7 +11,9 @@ import Logout from "../pages/users/Logout";
 import UserProfile from "../pages/users/UserProfile";
 import ResetPassword from "../pages/users/ResetPassword";
 import VerifyPassword from "../pages/users/VerifyPassword";
+
 import ProductDetails from "../pages/products/ProductDetails";
+import Products from "../pages/products/Products";
 import Admin from "../pages/admin/Admin";
 
 import Navbar from "../layout/Navbar";
@@ -34,6 +36,7 @@ const Index = () => {
                 <Route path='reset-password/:token' element={<VerifyPassword />} />
 
                 {/* products */}
+                <Route path='/products' element={<Products />} />
                 <Route path='/products/:slug' element={<ProductDetails />} />
 
                 {/* admin */}
