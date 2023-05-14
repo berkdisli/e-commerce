@@ -1,15 +1,16 @@
 const createError = require("http-errors")
 const slugify = require('slugify')
+const { successResponse, errorResponse } = require('../helpers/responseHandler');
 
 let Product = require("../model/productModel")
 
 const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find();
+        const products = await Product.find().populate('category');
         return res.status(200).json({
             success: true,
             message: "all products returned",
-            products: products
+            product: { products }
         })
     } catch (err) {
         return res.status(500).json({
@@ -20,11 +21,16 @@ const getAllProducts = async (req, res) => {
 
 const getSingleProduct = async (req, res) => {
     try {
-        const products = await Product.find();
+        const product = await Product.findOne({ slug: slug });
+
+        if (!product) {
+            throw createError(404, 'this product was not found')
+        }
+
         return res.status(200).json({
             success: true,
             message: "single product returned",
-            products: products
+            product: product
         })
     } catch (err) {
         return res.status(500).json({
@@ -35,7 +41,7 @@ const getSingleProduct = async (req, res) => {
 
 const createProduct = async (req, res) => {
     try {
-        const { name, description, price, category } = req.body;
+        const { name, description, price, category, sold, quantity, instock, size } = req.body;
         const { image } = req.file;
         if (image && image.size > 1024 * 1024 * 2)
             throw createError(400, "The image size is large, it must be less than 2mb")
@@ -46,21 +52,32 @@ const createProduct = async (req, res) => {
             )
         }
 
-        if (!name || !description || !price || !category) {
-            throw createError(404, `name, description, price or category is missing`
+        if (!name || !description || !price || !category || !sold || !quantity || !instock || !size) {
+            throw createError(400, `name, description, price, category, sold, quantity, instock or size is missing`
             );
         }
 
         if (name.length < 2) {
-            throw createError(404, `min name length is 2 `);
+            throw createError(400, `min name length is 2 `);
         }
 
-        const newProduct = new Product({
+        const isProductExist = await Product.exists({ name: name })
+        if (isProductExist) {
+            throw new createError(400, 'a product with this name already exists')
+        }
+
+        const newProduct = await Product.create({
             name: name,
-            slug: slugify(title),
+            slug: slugify(name),
             description: description,
+            price: price,
+            sold: sold,
+            quantity: quantity,
             category: category,
-            image: image
+            instock: instock,
+            size: size,
+            image: image,
+
         })
 
         //save the product
@@ -74,7 +91,7 @@ const createProduct = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "The product was created",
-            products: newProduct
+            product: newProduct
         })
     } catch (err) {
         res.status(500).json({
@@ -85,33 +102,36 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     try {
-        const products = await Product.find();
-        return res.status(200).json({
-            success: true,
-            message: "the product was succesfully updated ",
-            products: products
+        const filter = { slug: req.params.slug }
+        const options = { new: true }
+        const image = req?.file?.filename
+        const updates = {}
+        Object.keys(req.body).forEach((property) => {
+            if (req.body[property]) {
+                updates[property] = req.body[property]
+            }
         })
-    } catch (err) {
-        return res.status(500).json({
-            message: err.message
-        });
+        if (image) updates['image'] = image
+        const updatedData = await Product.findOneAndUpdate(filter, updates, options)
+        if (!updatedData) throw createError(404, 'the product was not found')
+
+        res.status(200).json({ message: 'the product was updated successfully' })
+    } catch (error) {
+        next(error)
     }
-};
+}
 
 const deleteProduct = async (req, res) => {
     try {
-        const products = await Product.find();
-        return res.status(200).json({
-            success: true,
-            message: "the product was deleted successfully",
-            products: products
-        })
-    } catch (err) {
-        return res.status(500).json({
-            message: err.message
-        });
+        const { slug } = req.params
+        const deleteTheProduct = await Product.findOneAndDelete({ slug: slug })
+        if (!deleteTheProduct) throw createError(404, 'the product was not found')
+
+        res.status(200).json({ message: 'the product was deleted successfully' })
+    } catch (error) {
+        next(error)
     }
-};
+}
 
 
 module.exports = { getAllProducts, getSingleProduct, createProduct, updateProduct, deleteProduct }

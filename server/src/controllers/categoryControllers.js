@@ -7,15 +7,20 @@ let Category = require("../model/category")
 const createCategory = async (req, res, next) => {
     try {
         const { name } = req.body;
-        const category = await Category.create({
+        if (!name) {
+            throw createError(400, 'name cannot be empty')
+        }
+        const newCategory = await Category.create({
             name: name,
             slug: slugify(name)
         });
 
+        const categoryData = await newCategory.save()
+
         return successResponse(res, {
             statusCode: 201,
-            message: 'Category was created successfully',
-            payload: { category: category }
+            message: 'the category was created successfully',
+            payload: categoryData
         })
     } catch (err) {
         next(err)
@@ -44,7 +49,7 @@ const getSingleCategory = async (req, res, next) => {
 
         return successResponse(res, {
             statusCode: 201,
-            message: 'category returned successfully',
+            message: 'the category returned successfully',
             payload: { category: category }
         })
     } catch (error) {
@@ -75,11 +80,10 @@ const updateCategory = async (req, res, next) => {
         });
 
 
-        return successResponse(res,
-            {
-                statusCode: 201,
-                message: 'category was updated successfully'
-            })
+        return successResponse(res, {
+            statusCode: 201,
+            message: 'the category was updated successfully'
+        })
     } catch (error) {
         next(error)
     }
@@ -87,18 +91,18 @@ const updateCategory = async (req, res, next) => {
 
 const deleteCategory = async (req, res, next) => {
     try {
-        const categories = await Category.find();
+        const { slug } = req.params
+        const deletedCategory = await Category.findOneAndDelete({ slug: slug })
+        if (!deletedCategory) throw new createError(400, 'the category was not found')
+
         return successResponse(res, {
-            statusCode: 200,
-            message: `'${name}'category was deleted successfully`,
-            payload: categories
+            statusCode: 201,
+            message: 'the category was deleted successfully'
         })
-    } catch (err) {
-        return res.status(500).json({
-            message: err.message
-        });
+    } catch (error) {
+        next(error)
     }
-};
+}
 
 
 

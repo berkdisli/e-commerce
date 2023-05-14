@@ -31,7 +31,7 @@ app.use("/api/admin", adminRouter);
 const productRouter = require("./routes/productRoutes.js");
 app.use("/api/products", productRouter);
 
-const categoryRouter = require("./routes/category");
+const categoryRouter = require("./routes/categoryRoutes");
 app.use("/api/categories", categoryRouter);
 
 //server working
