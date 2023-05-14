@@ -1,4 +1,5 @@
 import axios from "axios";
+axios.defaults.withCredentials = true;
 const baseURL = "http://127.0.0.1:8080" || "http://localhost:8080";
 
 // auth
@@ -14,12 +15,12 @@ export const activateUser = async (token) => {
 };
 
 export const loginUser = async (user) => {
-    const response = await axios.post(`${baseURL}/api/users/login`, user);
+    const response = await axios.post(`${baseURL}/api/users/login`, { user });
     return response.data;
 };
 
-export const logoutUser = async (user) => {
-    const response = await axios.post(`${baseURL}/api/users/logout`, user);
+export const logoutUser = async () => {
+    const response = await axios.post(`${baseURL}/api/users/logout`);
     return response.data;
 };
 
