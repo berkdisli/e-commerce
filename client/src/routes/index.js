@@ -7,7 +7,6 @@ import Home from "../pages/Home";
 import Register from "../pages/users/Register";
 import Login from "../pages/users/Login";
 import Activate from "../pages/users/Activate";
-import Logout from "../pages/users/Logout";
 import UserProfile from "../pages/users/UserProfile";
 import ResetPassword from "../pages/users/ResetPassword";
 import VerifyPassword from "../pages/users/VerifyPassword";
@@ -30,7 +29,6 @@ const Index = () => {
                 <Route path="/register" element={<Register />} />
                 <Route path="/api/users/activate/:token" element={<Activate />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/logout" element={<Logout />} />
                 <Route path="/user-profile" element={<UserProfile />} />
                 <Route path='/reset-password' element={<ResetPassword />} />
                 <Route path='reset-password/:token' element={<VerifyPassword />} />

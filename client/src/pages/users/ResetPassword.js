@@ -24,12 +24,7 @@ const ResetPassword = () => {
             name: 'username',
             required: true,
         },
-        {
-            id: 2,
-            type: 'password',
-            name: 'password',
-            required: true,
-        }]
+    ]
 
     const inputsForm = inputs.map(input => {
         return (
