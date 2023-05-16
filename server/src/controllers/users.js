@@ -130,7 +130,7 @@ const loginUser = async (req, res) => {
             { _id: user._id },
             (jwtAuthorizationKey),
             {
-                expiresIn: '15m',
+                expiresIn: '30m',
             }
         )
 
