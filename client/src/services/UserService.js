@@ -15,8 +15,13 @@ export const activateUser = async (token) => {
 };
 
 export const loginUser = async (user) => {
-    const response = await axios.post(`${baseURL}/api/users/login`, { user });
-    return response.data;
+    try {
+        const response = await axios.post(`${baseURL}/api/users/login`, user);
+        return response;
+    } catch (error) {
+        console.log(error)
+    }
+
 };
 
 export const logoutUser = async () => {

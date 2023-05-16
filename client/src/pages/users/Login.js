@@ -9,7 +9,7 @@ import { admin, login } from "../../features/userSlice";
 function Login() {
     const dispatch = useDispatch()
     const [user, setUser] = useState({
-        username: '',
+        email: '',
         password: ''
     });
     const navigate = useNavigate()
@@ -22,8 +22,8 @@ function Login() {
     const inputs = [
         {
             id: 1,
-            type: 'text',
-            name: 'username',
+            type: 'email',
+            name: 'email',
             required: true,
         },
         {
@@ -41,11 +41,13 @@ function Login() {
 
     const handleLogin = async (e) => {
         try {
+            // console.log(user.email, user.password)
             e.preventDefault()
             const response = await loginUser(user)
+            // console.log(response)
             toast(response.data.message)
             setUser({
-                username: '',
+                email: '',
                 password: ''
             })
             dispatch(login())
@@ -57,7 +59,7 @@ function Login() {
             }
 
         } catch (error) {
-            toast(error.response.data.message)
+            toast(error)
         }
 
     }
