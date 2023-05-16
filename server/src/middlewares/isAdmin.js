@@ -1,24 +1,19 @@
 const User = require("../model/users");
+const createError = require("http-errors")
 
 const isAdmin = async (req, res, next) => {
     try {
-        if (req.session.userId) {
-            const adminData = await User.findById(req.session.userId);
-            if (adminData?.is_admin === 1) {
-                next();
-            } else {
-                res.status(401).json({
-                    message: "you are not an admin",
-                });
-            }
+        const id = req._id
+        if (id) {
+            const user = await User.findById(id)
+            if (!user) throw createError(404, 'no user found with this id')
+            if (!user.is_admin) throw createError(404, 'the user is not an admin')
+            next()
         } else {
-            res.status(400).json({
-                message: "user is not logged in, please login",
-            });
+            throw createError(500, 'please login')
         }
     } catch (error) {
-        console.log(error);
+        next(error)
     }
-};
-
+}
 module.exports = isAdmin;
