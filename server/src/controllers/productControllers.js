@@ -41,7 +41,7 @@ const getSingleProduct = async (req, res) => {
 
 const createProduct = async (req, res) => {
     try {
-        const { name, description, price, category, sold, quantity, instock, size } = req.body;
+        const { name, description, price, category, sold, inStock, size } = req.body;
         const { image } = req.file;
         if (image && image.size > 1024 * 1024 * 2)
             throw createError(400, "The image size is large, it must be less than 2mb")
@@ -52,7 +52,7 @@ const createProduct = async (req, res) => {
             )
         }
 
-        if (!name || !description || !price || !category || !sold || !quantity || !instock || !size) {
+        if (!name || !description || !price || !category || !sold || !inStock || !size) {
             throw createError(400, `name, description, price, category, sold, quantity, instock or size is missing`
             );
         }
@@ -72,9 +72,8 @@ const createProduct = async (req, res) => {
             description: description,
             price: price,
             sold: sold,
-            quantity: quantity,
             category: category,
-            instock: instock,
+            inStock: inStock,
             size: size,
             image: image,
 
