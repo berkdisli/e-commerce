@@ -10,13 +10,14 @@ import Activate from "../pages/users/Activate";
 import UserProfile from "../pages/users/UserProfile";
 import ResetPassword from "../pages/users/ResetPassword";
 import VerifyPassword from "../pages/users/VerifyPassword";
-
 import ProductDetails from "../pages/products/ProductDetails";
 import Products from "../pages/products/Products";
-import Admin from "../pages/admin/Admin";
+import { CreateProduct } from "../pages/admin/CreateProduct";
+import { CreateCategory } from "../pages/admin/CreateCategory";
 
 import Navbar from "../layout/Navbar";
 import Footer from "../layout/Footer";
+
 
 const Index = () => {
     return (
@@ -38,8 +39,8 @@ const Index = () => {
                 <Route path='/products/:slug' element={<ProductDetails />} />
 
                 {/* admin */}
-                <Route path='/admin' element={<Admin />} />
-
+                <Route path="/admin/createProduct" element={<CreateProduct />} />
+                <Route path="/admin/createCategory" element={<CreateCategory />} />
 
             </Routes>
             <Footer />

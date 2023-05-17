@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { getAllProducts } from '../services/ProductService'
 
-export const getAllProducts = createAsyncThunk("api/products/all", async () => {
+export const allProducts = createAsyncThunk("api/products/all", async () => {
     const res = await getAllProducts();
     return res;
 })
@@ -18,14 +18,14 @@ export const productSlice = createSlice({
     },
     extraReducers: (builder) => {
 
-        builder.addCase(getAllProducts.fulfilled, (state, action) => {
+        builder.addCase(allProducts.fulfilled, (state, action) => {
             console.log(action.payload)
             state.products = action.payload
         });
-        builder.addCase(getAllProducts.pending, (state, action) => {
+        builder.addCase(allProducts.pending, (state, action) => {
             state.products = []
         });
-        builder.addCase(getAllProducts.rejected, (state, action) => {
+        builder.addCase(allProducts.rejected, (state, action) => {
             state.products = []
         });
     }

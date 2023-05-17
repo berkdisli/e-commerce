@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { getAllCategories } from '../services/CategoryService';
 
-export const allCategory = createAsyncThunk("api/categorys/all", async () => {
+export const allCategories = createAsyncThunk("api/categories/", async () => {
     const res = await getAllCategories();
     return res;
 })
@@ -11,7 +11,7 @@ const initialState = {
 }
 
 export const categorySlice = createSlice({
-    name: 'categorys',
+    name: 'categories',
     initialState,
     reducers: {
         search: (state, action) => {
@@ -20,15 +20,15 @@ export const categorySlice = createSlice({
     },
     extraReducers: (builder) => {
 
-        builder.addCase(allCategory.fulfilled, (state, action) => {
+        builder.addCase(allCategories.fulfilled, (state, action) => {
             state.categorys = action.payload
         });
 
-        builder.addCase(allCategory.pending, (state, action) => {
+        builder.addCase(allCategories.pending, (state, action) => {
             state.categorys = []
         });
 
-        builder.addCase(allCategory.rejected, (state, action) => {
+        builder.addCase(allCategories.rejected, (state, action) => {
             state.categorys = []
         });
     }
