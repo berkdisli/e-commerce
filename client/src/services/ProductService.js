@@ -17,8 +17,8 @@ export const createProduct = async (product) => {
     return response
 }
 
-export const updateProduct = async (product) => {
-    const response = await axios.put(`${baseURL}/api/products/`, product)
+export const updateProduct = async (slug) => {
+    const response = await axios.put(`${baseURL}/api/products/${slug}`)
     return response
 }
 
