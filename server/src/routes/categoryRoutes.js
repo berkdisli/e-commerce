@@ -9,12 +9,12 @@ const isAdmin = require("../middlewares/isAdmin");
 const categoryRouter = express.Router();
 
 categoryRouter.route("/")
-    .get(validateCategory, runValidation, isLoggedIn, isAdmin, getAllCategories)
-    .post(validateCategory, runValidation, isLoggedIn, isAdmin, createCategory);
+    .get(runValidation, getAllCategories)
+    .post(validateCategory, runValidation, createCategory);
 
 categoryRouter.route("/:slug")
-    .get(validateCategory, runValidation, isLoggedIn, isAdmin, getSingleCategory)
-    .put(validateCategory, runValidation, isLoggedIn, isAdmin, updateCategory)
-    .delete(validateCategory, runValidation, isLoggedIn, isAdmin, deleteCategory);
+    .get(runValidation, getSingleCategory)
+    .put(validateCategory, runValidation, updateCategory)
+    .delete(runValidation, deleteCategory);
 
 module.exports = categoryRouter;

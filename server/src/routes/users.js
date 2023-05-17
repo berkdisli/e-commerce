@@ -17,17 +17,17 @@ userRouter.use(
 )
 
 userRouter.route("/")
-    .get(isLoggedIn, userProfile)
-    .put(isLoggedIn, upload.single("image"), updateUser)
-    .delete(isLoggedIn, deleteUser);
+    .get(userProfile)
+    .put(upload.single("image"), updateUser)
+    .delete(deleteUser);
 
 userRouter.post("/register", upload.single("image"), registerUser);
 userRouter.post("/login", isLoggedOut, loginUser);
-userRouter.get("/logout", isLoggedIn, logoutUser);
+userRouter.get("/logout", logoutUser);
 userRouter.post("/activate", verifyEmail);
 userRouter.post("/forget-password", forgetPassword);
 userRouter.post("/reset-password", resetPassword);
-userRouter.get('/refresh-token', isLoggedIn, getRefreshToken)
+userRouter.get('/refresh-token', getRefreshToken)
 userRouter.post('/verify-password', verifyPassword)
 
 

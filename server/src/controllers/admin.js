@@ -1,7 +1,9 @@
 const { errorResponse, successResponse } = require("../helpers/responseHandler");
 const { generateHashPassword, compareHashPassword } = require("../helpers/securePassword");
 const User = require("../model/users");
-
+const jwt = require('jsonwebtoken');
+const dev = require("../config");
+const createError = require("http-errors")
 
 const loginAdmin = async (req, res) => {
     try {
@@ -30,10 +32,29 @@ const loginAdmin = async (req, res) => {
             errorResponse(res, 400, "email/password does not match",
             );
         }
-        req.session.userId = user._id;
+        const jwtAuthorizationKey = dev.app.jwtAuthorizationKey
+        const accessToken = jwt.sign(
+            { _id: user._id },
+            (jwtAuthorizationKey),
+            {
+                expiresIn: '30m',
+            }
+        )
 
+        // reset the token if there's a cookie already
+        if (req.cookies[`${accessToken}`]) {
+            return (req.cookies[`${accessToken}`] = '')
+        }
+
+        // Set a cookie containing the refresh token
+        res.cookie('accessToken', accessToken, {
+            expires: new Date(Date.now() + 1000 * 60 * 15), // 15 min
+            httpOnly: true,
+            secure: false,
+        })
         res.status(200).json({
             user: {
+                id: user._id,
                 name: user.name,
                 email: user.email,
                 phone: user.phone,
@@ -49,16 +70,28 @@ const loginAdmin = async (req, res) => {
 };
 const logoutAdmin = (req, res) => {
     try {
-        req.session.destroy();
-        res.clearCookie("admin-session");
-        successResponse(res, 200, "logout successful",
-        );
-    } catch (err) {
-        res.status(500).json({
-            message: err.message
-        });
+        if (!req.headers.cookie) {
+            throw createError(404, 'no cookie was found')
+        }
+        const token = req.headers.cookie.split('=')[1]
+
+        if (!token) {
+            throw createError(404, 'no token was found')
+        }
+        const jwtAuthorizationKey = dev.app.jwtAuthorizationKey
+        const decoded = jwt.verify(token, jwtAuthorizationKey)
+        if (!decoded) throw createError(403, 'Invalid Token')
+
+        if (req.cookies[`${decoded._id}`]) {
+            req.cookies[`${decoded._id}`] = ''
+        }
+
+        res.clearCookie(`${decoded._id}`)
+        res.status(200).json({ message: 'user is logged-out' })
+    } catch (error) {
+        next(error)
     }
-};
+}
 
 const getAllUsers = async (req, res) => {
     try {

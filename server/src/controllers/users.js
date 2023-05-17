@@ -11,9 +11,9 @@ const { successResponse } = require('../helpers/responseHandler');
 
 const updateUser = async (req, res) => {
     try {
-        const hashedPassword = await generateHashPassword(req.fields.password)
-        const updatedData = await User.findByIdAndUpdate(req.session.userId,
-            { ...req.fields, password: hashedPassword },
+        const hashedPassword = await generateHashPassword(req.body.password)
+        const updatedData = await User.findByIdAndUpdate(req.params.id,
+            { ...req.body, password: hashedPassword },
             { new: true }
         );
 
@@ -31,8 +31,10 @@ const updateUser = async (req, res) => {
             updatedData.image.contentType = image.type;
         }
         await updatedData.save();
-        successResponse(res, 200, "the user was successfully updated",
-        );
+        successResponse(res, {
+            statusCode: 201,
+            message: "the user was successfully updated",
+        });
     } catch (err) {
         res.status(500).json({
             message: err.message
@@ -42,9 +44,11 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
-        await User.findByIdAndDelete(req.session.userId)
-        successResponse(res, 200, "the user was deleted successfully",
-        );
+        await User.findByIdAndDelete(req.params.id)
+        successResponse(res, {
+            statusCode: 201,
+            message: "the user was deleted successfully",
+        });
     } catch (err) {
         res.status(500).json({
             message: err.message
@@ -146,7 +150,10 @@ const loginUser = async (req, res) => {
             secure: false,
         })
 
-        res.status(200).json({ message: `Welcome, ${user.name}!` });
+        successResponse(res, {
+            statusCode: 201,
+            message: `Welcome, ${user.name}!`
+        });
     } catch (error) {
         res.status(500).json({ message: `Server Error: ${error.message}` });
     }
@@ -194,8 +201,10 @@ const verifyEmail = async (req, res) => {
                 )
             }
 
-            successResponse(res, 200, "the user was created and ready to sign in",
-            );
+            successResponse(res, {
+                statusCode: 201,
+                message: "the user was created and ready to sign in",
+            });
         });
     } catch (err) {
         res.status(500).json({
@@ -204,21 +213,37 @@ const verifyEmail = async (req, res) => {
     }
 };
 
-const logoutUser = async (req, res) => {
+const logoutUser = async (req, res, next) => {
     try {
-        req.session.destroy();
-        res.clearCookie("user_session");
-        res.status(200).json({ message: "Log out is successfull" });
+        if (!req.headers.cookie) {
+            throw createError(404, 'no cookie was found')
+        }
+        const token = req.headers.cookie.split('=')[1]
+
+        if (!token) {
+            throw createError(404, 'no token was found')
+        }
+        const jwtAuthorizationKey = dev.app.jwtAuthorizationKey
+        const decoded = jwt.verify(token, jwtAuthorizationKey)
+        if (!decoded) throw createError(403, 'Invalid Token')
+
+        if (req.cookies[`${decoded._id}`]) {
+            req.cookies[`${decoded._id}`] = ''
+        }
+
+        res.clearCookie(`${decoded._id}`)
+        res.status(200).json({ message: 'user is logged-out' })
     } catch (error) {
-        res.status(500).json({ message: `Server Error: ${error.message}` });
+        next(error)
     }
-};
+}
 
 const userProfile = async (req, res) => {
     try {
-        const userData = await User.findById(req.session.userId)
-        return res.status(200).json({
-            ok: true,
+        const userData = await User.findById(id)
+
+        return successResponse(res, {
+            statusCode: 201,
             message: "user profile",
             user: userData
         })
@@ -264,7 +289,8 @@ const forgetPassword = async (req, res) => {
         };
         sendEmailWithNodeMailer(emailData);
 
-        return res.status(200).json({
+        return successResponse(res, {
+            statusCode: 201,
             message: "An email has been sent to reset your password",
             token: token
         });
@@ -311,8 +337,10 @@ const resetPassword = async (req, res) => {
                 );
             }
 
-            successResponse(res, 200, "your new password is successfully updated ",
-            );
+            successResponse(res, {
+                statusCode: 201,
+                message: "your new password is successfully updated ",
+            });
         });
     } catch (err) {
         res.status(500).json({
@@ -352,7 +380,10 @@ const getRefreshToken = async (req, res, next) => {
             });
 
         })
-        successResponse(200, 'refresh token successfull')
+        successResponse(res, {
+            statusCode: 201,
+            message: 'refresh token successfull'
+        })
     } catch (err) {
         console.log(err);
     }
@@ -374,7 +405,10 @@ const verifyPassword = (req, res) => {
             if (!updatedUser) {
                 throw createError(401, 'password could not be changed')
             }
-            successResponse(200, 'password has been changed successfully')
+            successResponse(res, {
+                statusCode: 201,
+                message: 'password has been changed successfully'
+            })
         });
     } catch (e) {
         res.status(500).json({ message: e.message })
