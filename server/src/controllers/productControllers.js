@@ -1,14 +1,15 @@
 const createError = require("http-errors")
 const slugify = require('slugify')
-const { successResponse, errorResponse } = require('../helpers/responseHandler');
+const { successResponse } = require('../helpers/responseHandler');
 
 let Product = require("../model/productModel")
 
 const getAllProducts = async (req, res) => {
     try {
         const products = await Product.find().populate('category');
-        return res.status(200).json({
-            success: true,
+        console.log(products)
+        return successResponse(res, {
+            statusCode: 201,
             message: "all products returned",
             product: { products }
         })
@@ -27,8 +28,8 @@ const getSingleProduct = async (req, res) => {
             throw createError(404, 'this product was not found')
         }
 
-        return res.status(200).json({
-            success: true,
+        return successResponse(res, {
+            statusCode: 201,
             message: "single product returned",
             product: product
         })
@@ -87,8 +88,8 @@ const createProduct = async (req, res) => {
             )
         }
 
-        return res.status(200).json({
-            success: true,
+        return successResponse(res, {
+            statusCode: 200,
             message: "The product was created",
             product: newProduct
         })
@@ -114,7 +115,10 @@ const updateProduct = async (req, res) => {
         const updatedData = await Product.findOneAndUpdate(filter, updates, options)
         if (!updatedData) throw createError(404, 'the product was not found')
 
-        res.status(200).json({ message: 'the product was updated successfully' })
+        successResponse(res, {
+            statusCode: 201,
+            message: 'the product was updated successfully'
+        })
     } catch (error) {
         next(error)
     }
@@ -126,11 +130,55 @@ const deleteProduct = async (req, res) => {
         const deleteTheProduct = await Product.findOneAndDelete({ slug: slug })
         if (!deleteTheProduct) throw createError(404, 'the product was not found')
 
-        res.status(200).json({ message: 'the product was deleted successfully' })
+        successResponse(res, {
+            statusCode: 200,
+            message: 'the product was deleted successfully'
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+const searchProducts = async (req, res, next) => {
+    try {
+        const { page = 1, limit = 3 } = req.query
+        const searchValue =
+            typeof req.query.searchValue === 'string'
+                ? req.query.searchValue.trim()
+                : ''
+        let filter = {}
+        const searchRegExpr = new RegExp('.*' + searchValue + '.*', 'i')
+        if (searchValue) {
+            filter = {
+                $or: [
+                    { name: { $regex: searchRegExpr } },
+                    { description: { $regex: searchRegExpr } },
+                ],
+            }
+        }
+        const products = await Product.find(filter)
+            .limit(limit)
+            .skip((page - 1) * limit)
+            .sort({ createdAt: -1 })
+
+        const count = await Product.find().countDocuments()
+        return successResponse(res, {
+            statusCode: 201,
+            message: 'Searched products returned successfully!'
+        },
+            {
+                products,
+                totalPages: Math.ceil(count / limit),
+                currentPage: page,
+                previousPage: page - 1,
+                nextPage: page + 1,
+                totalNumberOfProducts: count,
+            }
+        )
     } catch (error) {
         next(error)
     }
 }
 
 
-module.exports = { getAllProducts, getSingleProduct, createProduct, updateProduct, deleteProduct }
+module.exports = { getAllProducts, getSingleProduct, createProduct, updateProduct, deleteProduct, searchProducts }
