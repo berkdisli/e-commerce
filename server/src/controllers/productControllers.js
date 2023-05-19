@@ -11,7 +11,7 @@ const getAllProducts = async (req, res) => {
         return successResponse(res, {
             statusCode: 201,
             message: "all products returned",
-            product: { products }
+            payload: { products: products }
         })
     } catch (err) {
         return res.status(500).json({
