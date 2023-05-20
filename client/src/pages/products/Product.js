@@ -1,22 +1,43 @@
-import React from 'react'
 import { useNavigate } from 'react-router-dom';
 
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+
 const Product = (props) => {
+
     const navigate = useNavigate();
     const handleDetailsPage = (slug) => {
         navigate(`/product/${slug}`)
     }
-    const { name, description, image, price, slug } = props.product;
-    const imageUrl = 'http://localhost:8080/product/image/' + image;
+
+    const { name, image, price, slug } = props.product;
+
+    const imageUrl = `http://localhost:8080/images/products/1684350838245-jean.jpg`;
+
     return (
         <div className='product'>
-            <img className='image' src={imageUrl} alt={name} />
-            <h2> {name} </h2>
-            <p> {price} </p>
-            <p> {description} </p>
-            <button onClick={() => { handleDetailsPage(slug) }}>view more</button>
-            <button>add to the cart</button>
-
+            <Card sx={{ maxWidth: 250, maxHeight: 270, display: 'flex', flexDirection: 'column' }}>
+                <CardMedia
+                    sx={{ height: 100, width: 100 }}
+                    image={imageUrl}
+                />
+                <CardContent>
+                    <Typography gutterBottom component="div">
+                        {name}
+                    </Typography>
+                    <Typography color="text.secondary" variant="body2">
+                        price : € {price}
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <Button size="small" onClick={() => { handleDetailsPage(slug) }}>View more</Button>
+                    <Button size="small">Add to cart</Button>
+                </CardActions>
+            </Card>
         </div>
     );
 }

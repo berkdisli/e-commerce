@@ -14,7 +14,7 @@ const Activate = () => {
             toast.success(data.message);
             navigate('/login')
         } catch (err) {
-            toast.error(err.response.data.error.message)
+            toast.error(err.message)
 
         }
     }
