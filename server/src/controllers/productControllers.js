@@ -180,5 +180,32 @@ const searchProducts = async (req, res, next) => {
     }
 }
 
+const filterProducts = async (req, res, next) => {
+    try {
+        const { price, name, category } = req.body
+        const filter = {}
 
-module.exports = { getAllProducts, getSingleProduct, createProduct, updateProduct, deleteProduct, searchProducts }
+        if (price && price.length) {
+            filter.price = { $gte: price[0], $lte: price[1] }
+        }
+
+        if (name) {
+            filter.name = { $regex: name }
+        }
+
+        if (category) {
+            filter.category = category
+        }
+
+        const filterResult = await Product.find(filter)
+        return successResponse(res, {
+            statusCode: 201,
+            message: 'product return successfully', product: filterResult
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+module.exports = { getAllProducts, getSingleProduct, createProduct, updateProduct, deleteProduct, searchProducts, filterProducts }
