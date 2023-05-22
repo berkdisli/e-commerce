@@ -1,23 +1,10 @@
 const express = require("express");
-const session = require("express-session");
 const { updateUser, deleteUser, registerUser, loginUser, verifyEmail, userProfile, logoutUser, forgetPassword, resetPassword, getRefreshToken, verifyPassword } = require("../controllers/users");
 const { isLoggedIn, isLoggedOut } = require("../middlewares/auth");
 const userRouter = express.Router();
-const dev = require("../config");
 const upload = require("../middlewares/upload")
 
-userRouter.use(
-    session({
-        name: "user_session",
-        secret: dev.app.sessionSecretKey,
-        resave: false,
-        saveUninitialized: true,
-        cookie: { secure: false, maxAge: 60000 }
-    })
-)
-
-userRouter.route("/")
-    .get(userProfile)
+userRouter.route("/:_id")
     .put(upload.single("image"), updateUser)
     .delete(deleteUser);
 
@@ -27,8 +14,8 @@ userRouter.get("/logout", logoutUser);
 userRouter.post("/activate", verifyEmail);
 userRouter.post("/forget-password", forgetPassword);
 userRouter.post("/reset-password", resetPassword);
-userRouter.get('/refresh-token', getRefreshToken)
-userRouter.post('/verify-password', verifyPassword)
-
+userRouter.get('/refresh-token', getRefreshToken);
+userRouter.post('/verify-password', verifyPassword);
+userRouter.get('/profile/:id', userProfile);
 
 module.exports = userRouter;

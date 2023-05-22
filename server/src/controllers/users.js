@@ -87,8 +87,7 @@ const registerUser = async (req, res) => {
             subject: "Account activation email",
             html: `
             <h2>Hello ${name}!</h2>
-            <p> Please click here to <a href= "${dev.app.clientURL}/api/users/activate/
-            ${token}" target = "_blank"> activate your account </a> </p>
+            <p> Please click here to <a href= "${dev.app.clientURL}/api/users/activate/${token}" target = "_blank"> activate your account </a> </p>
             `
         };
         sendEmailWithNodeMailer(emailData);
@@ -152,7 +151,8 @@ const loginUser = async (req, res) => {
 
         successResponse(res, {
             statusCode: 201,
-            message: `Welcome, ${user.name}!`
+            message: `Welcome, ${user.name}!`,
+            payload: { user: user }
         });
     } catch (error) {
         res.status(500).json({ message: `Server Error: ${error.message}` });
@@ -161,18 +161,22 @@ const loginUser = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
     try {
-        const { token } = req.body;
+        const { token } = req.body.token;
         if (!token) throw createError(404, "token not found")
 
         const secretKey = dev.app.jwtSecretKey
+        console.log(token)
         jwt.verify(token, secretKey, async function (err, decoded) {
             if (err) {
+                console.log(err)
                 return res.status(401).json({
+
                     message: "Token is expired",
                 })
             }
             //decoded
             const { name, email, hashedPassword, phone, image, age } = decoded;
+            console.log(decoded)
             const isExist = await User.findOne({ email: email });
             if (isExist)
                 throw createError(400, `the user already exist`
@@ -207,6 +211,7 @@ const verifyEmail = async (req, res) => {
             });
         });
     } catch (err) {
+        console.log(err)
         res.status(500).json({
             message: err.message
         });
@@ -232,27 +237,29 @@ const logoutUser = async (req, res, next) => {
         }
 
         res.clearCookie(`${decoded._id}`)
-        res.status(200).json({ message: 'user is logged-out' })
+        successResponse(res, {
+            statusCode: 201,
+            message: 'user is logged-out'
+        })
     } catch (error) {
         next(error)
     }
 }
 
-const userProfile = async (req, res) => {
+const userProfile = async (req, res, next) => {
     try {
-        const userData = await User.findById(id)
-
+        const id = req.params.id
+        const user = await User.findById(id)
+        if (!user) throw createError(404, 'the user was not found')
         return successResponse(res, {
             statusCode: 201,
-            message: "user profile",
-            user: userData
+            message: 'the user returned successfully',
+            payload: { user: user }
         })
     } catch (err) {
-        return res.status(500).json({
-            message: err.message
-        });
+        next(err)
     }
-};
+}
 
 const forgetPassword = async (req, res) => {
     try {
