@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import Category from './Category';
-import { useDispatch, useSelector } from 'react-redux';
-import { allCategories } from '../../features/categorySlice';
 import { getAllCategories } from '../../services/CategoryService';
 
 const Categories = () => {
