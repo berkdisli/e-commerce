@@ -35,40 +35,45 @@ export const getRefreshToken = async () => {
 };
 
 export const resetPassword = async (user) => {
-    const response = await axios.post('http://localhost:8080/api/users/reset-password', user)
+    const response = await axios.post(`${baseURL}/api/users/refresh-password`, user)
     return response
 }
 
 export const verifyPassword = async (token) => {
-    const response = await axios.post('http://localhost:8080/api/users/verify-password', { token })
+    const response = await axios.post(`${baseURL}/api/users/verify-password`, { token })
     return response
 }
 
 // users
 
 export const updateUser = async (id, user) => {
-    const response = await axios.put(`http://localhost:8080/api/users/${id}`, user)
+    const response = await axios.put(`${baseURL}/api/users/refresh-token${id}`, user)
     return response
 }
 
 export const deleteUser = async (id) => {
-    const response = await axios.delete(`http://localhost:8080/api/users/${id}`)
+    const response = await axios.delete(`${baseURL}/api/users/${id}`)
     return response
 }
+
+export const getUserProfile = async (id) => {
+    const response = await axios.get(`${baseURL}/api/users/profile/${id}`);
+    return response;
+};
 
 //admin
 
 export const getAllUsers = async () => {
-    const response = await axios.get(`http://localhost:8080/api/admin/dashboard/`)
+    const response = await axios.get(`${baseURL}/api/admin/dashboard`)
     return response
 }
 
 export const updateUserByAdmin = async (id, user) => {
-    const response = await axios.get(`http://localhost:8080/api/admin/dashboard/${id}`, user)
+    const response = await axios.get(`${baseURL}/admin/users/dashboard/${id}`, user)
     return response
 }
 
 export const deleteUserByAdmin = async (id) => {
-    const response = await axios.get(`http://localhost:8080/api/admin/dashboard/${id}`)
+    const response = await axios.get(`${baseURL}/admin/users/dashboard/${id}`)
     return response
 }

@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { getUserProfile } from '../services/UserService';
 
 const getLocalStoreItem = () => {
     if (localStorage.getItem('loginStatus') === null) {
@@ -16,24 +17,26 @@ const getLocalStoreAdmin = () => {
 }
 
 export const userSlice = createSlice({
-    name: 'user',
-    initialState: { Loggedin: getLocalStoreItem(), Admin: getLocalStoreAdmin() },
+    name: 'users',
+    initialState: { isLoggedin: getLocalStoreItem(), isAdmin: getLocalStoreAdmin(), userProfile: {} },
     reducers: {
         login: (state) => {
-            localStorage.setItem('loginStatus', 'true');
-            state.Loggedin = getLocalStoreItem()
+            localStorage.setItem('userId', state?.userProfile?.id);
+            state.isLoggedin = getLocalStoreItem()
+
         },
         logout: (state) => {
             localStorage.setItem('loginStatus', 'false');
-            state.Loggedin = getLocalStoreItem()
+            state.isLoggedin = getLocalStoreItem()
             localStorage.setItem('adminStatus', 'false');
-            state.Admin = getLocalStoreAdmin()
+            state.isAdmin = getLocalStoreAdmin()
         },
         admin: (state) => {
             localStorage.setItem('adminStatus', 'true');
-            state.Admin = getLocalStoreAdmin()
+            state.isAdmin = getLocalStoreAdmin()
         },
     }
+
 })
 
 export const { login, logout, admin } = userSlice.actions;

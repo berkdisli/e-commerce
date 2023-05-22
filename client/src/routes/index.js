@@ -30,7 +30,7 @@ const Index = () => {
                 <Route path="/register" element={<Register />} />
                 <Route path="/api/users/activate/:token" element={<Activate />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/user-profile" element={<UserProfile />} />
+                <Route path="/profile/" element={<UserProfile />} />
                 <Route path='/reset-password' element={<ResetPassword />} />
                 <Route path='reset-password/:token' element={<VerifyPassword />} />
 

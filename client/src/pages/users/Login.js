@@ -44,6 +44,7 @@ function Login() {
             // console.log(user.email, user.password)
             e.preventDefault()
             const response = await loginUser(user)
+            console.log(response)
             // console.log(response)
             toast(response.data.message)
             setUser({
@@ -51,9 +52,9 @@ function Login() {
                 password: ''
             })
             dispatch(login())
-            localStorage.setItem('userId', response.data.alreadyAnUser._id)
+            localStorage.setItem('userId', response.data.payload.user._id)
             navigate('/profile')
-            if (response.data.alreadyAnUser.is_admin) {
+            if (response.data.payload.user._id) {
                 dispatch(admin())
                 navigate('/admin', { state: { id: response.data.alreadyAnUser._id } })
             }

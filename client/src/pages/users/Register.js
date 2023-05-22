@@ -41,7 +41,7 @@ const Register = () => {
             newUser.append("image", image);
 
             const response = await registerUser(newUser);
-            toast.success(response.message);
+            toast.success(response);
 
             setName("");
             setEmail("");
@@ -50,6 +50,7 @@ const Register = () => {
             setPassword("");
             setImage("");
         } catch (err) {
+            console.log(err)
             toast.error(err.response.data.error.message);
         }
     };

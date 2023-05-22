@@ -11,10 +11,10 @@ const Activate = () => {
         try {
             const response = await activateUser({ token })
             const data = response.data;
-            toast.success(data.message);
+            toast.success(data.payload.message);
             navigate('/login')
         } catch (err) {
-            toast.error(err.message)
+            toast.error(err)
 
         }
     }
