@@ -1,35 +1,68 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { getAllProducts } from '../services/ProductService'
+import { getAllProducts, getFilteredProducts } from '../services/ProductService'
 
-export const allProducts = createAsyncThunk("api/products/all", async () => {
+export const readAllProduct = createAsyncThunk("api/products/", async () => {
     const res = await getAllProducts();
     return res;
 })
 
+export const filter = createAsyncThunk("api/products/filter", async (body) => {
+    const res = await getFilteredProducts(body);
+    return res;
+})
+
 const initialState = {
-    products: []
+    all_products: [],
+    favorite: [],
+    cart: []
 }
 
 export const productSlice = createSlice({
     name: 'products',
     initialState,
     reducers: {
-
+        removeProduct: (state, action) => {
+            state.all_products = state.all_products?.filter((products) => products.slug !== action.payload)
+        },
+        addToFavorite: (state, action) => {
+            if (state.favorite.includes(action.payload)) {
+            } else {
+                state.favorite.push(action.payload)
+            }
+        },
+        removeFromFavorite: (state, action) => {
+            state.favorite = state.favorite.map((favorite) => favorite._id !== action.payload._id)
+        },
+        addToCart: (state, action) => {
+            state.cart.push(action.payload)
+        },
+        removeFromCart: (state, action) => {
+            state.cart = state.cart.filter((c) => c._id !== action.payload._id)
+        }
     },
     extraReducers: (builder) => {
 
-        builder.addCase(allProducts.fulfilled, (state, action) => {
-            console.log(action.payload)
-            state.products = action.payload
+        builder.addCase(readAllProduct.fulfilled, (state, action) => {
+            state.all_products = action.payload
         });
-        builder.addCase(allProducts.pending, (state, action) => {
-            state.products = []
+        builder.addCase(readAllProduct.pending, (state, action) => {
+            state.all_products = []
         });
-        builder.addCase(allProducts.rejected, (state, action) => {
-            state.products = []
+        builder.addCase(readAllProduct.rejected, (state, action) => {
+            state.all_products = []
+        });
+
+        builder.addCase(filter.fulfilled, (state, action) => {
+            state.all_products = action.payload
+        });
+        builder.addCase(filter.pending, (state, action) => {
+            state.all_products = []
+        });
+        builder.addCase(filter.rejected, (state, action) => {
+            state.all_products = []
         });
     }
 })
 
-//export const { } = productSlice.actions
+export const { addToCart, removeFromCart, removeProduct, addToFavorite, removeFromFavorite } = productSlice.actions
 export default productSlice.reducer

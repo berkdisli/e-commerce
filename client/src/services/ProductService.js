@@ -27,3 +27,12 @@ export const deleteProduct = async (slug) => {
     return response
 }
 
+export const getSearchedProducts = async (searchValue = '', searchPage) => {
+    const response = await axios.get(`${baseURL}/api/products/search?searchValue=${searchValue}&page=${searchPage}`);
+    return response.data;
+};
+
+export const getFilteredProducts = async (checkedCategory, checkedPrice) => {
+    const response = await axios.post(`${baseURL}/api/products/filter`, { checkedCategory, checkedPrice });
+    return response.data;
+};

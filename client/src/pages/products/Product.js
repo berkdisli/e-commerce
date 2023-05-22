@@ -32,6 +32,9 @@ const Product = (props) => {
                     <Typography color="text.secondary" variant="body2">
                         price : € {price}
                     </Typography>
+                    <Typography color="text.secondary" variant="body2">
+                        <img src={`http://localhost:8080/${image}`} alt={name} />
+                    </Typography>
                 </CardContent>
                 <CardActions>
                     <Button size="small" onClick={() => { handleDetailsPage(slug) }}>View more</Button>

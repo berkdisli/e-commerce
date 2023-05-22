@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet';
 
-import { Card, Checkbox } from '@mui/material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { filter } from '../../features/productSlice';
 import { getAllProducts } from '../../services/ProductService';
+
 import Product from './Product';
 
+import { Button, Card, Checkbox, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 
 const Products = () => {
+    const dispatch = useAppDispatch();
     const [products, setProducts] = useState([{ _id: '' }])
 
     const fetchAllProducts = async () => {
         const result = await getAllProducts();
-        console.log(result)
         setProducts(result.payload.products);
     }
 
@@ -25,47 +22,82 @@ const Products = () => {
         fetchAllProducts()
     }, [])
 
+    const [filterBody, setFilterBody] = useState({});
+
+    const handleFilter = (e) => {
+        setFilterBody({ ...filterBody, [e.target.name]: e.target.name === 'price' ? e.target.value.split('-') : e.target.value })
+    }
+
+    const applyFilter = (e) => {
+        e.preventDefault();
+        console.log(filterBody)
+        dispatch(filter(filterBody))
+    }
+
+
     return (
         <div className='products'>
             <Helmet>
                 <title>Products Page</title>
             </Helmet>
-            <Card sx={{ minWidth: 250, minHeight: 500 }}>
-                <FormControl>
-                    <FormLabel id="filter">Filter</FormLabel>
-                    <RadioGroup
-                        aria-labelledby="filter"
-                        defaultValue="minimum"
-                        name="radio-buttons-group"
-                    >
-                        <FormControlLabel value="Men" control={<Checkbox />} label="Men" />
-                        <FormControlLabel value="Women" control={<Checkbox />} label="Women" />
-                        <FormControlLabel value="Kids" control={<Checkbox />} label="Kids" />
+            <form onSubmit={applyFilter}>
+                <Card sx={{ minWidth: 200, minHeight: 500 }}>
+                    <FormControl >
+                        <FormLabel id="filter">Filter By Price<hr /></FormLabel>
+                        <RadioGroup
+                            aria-labelledby="filter"
+                            defaultValue="minimum"
+                            name="price"
+                            onChange={handleFilter}
+                        >
+                            <FormControlLabel value="0-50" name="price" control={<Radio />} label="0-50€" />
+                            <FormControlLabel value="50-100" name="price" control={<Radio />} label="50€-100€" />
+                            <FormControlLabel value="100-200" name="price" control={<Radio />} label="100€-200€" />
+                            <FormControlLabel value="200-500" name="price" control={<Radio />} label="200€-500€" />
+                            <FormControlLabel value="500-1000" name="price" control={<Radio />} label="500€-1000€" />
+                        </RadioGroup>
 
-                        <FormControlLabel value="XSmall" control={<Checkbox />} label="XSmall" />
-                        <FormControlLabel value="Small" control={<Checkbox />} label="Small" />
-                        <FormControlLabel value="Medium" control={<Checkbox />} label="Medium" />
-                        <FormControlLabel value="Large" control={<Checkbox />} label="Large" />
-                        <FormControlLabel value="XLarge" control={<Checkbox />} label="XLarge" />
+                        <FormLabel id="filter">Filter By Gender<hr /></FormLabel>
+                        <RadioGroup
+                            aria-labelledby="filter"
+                            defaultValue="minimum"
+                            name="gender"
+                            onChange={handleFilter}
+                        >
+                            <FormControlLabel value="Men" control={<Checkbox />} label="Men" />
+                            <FormControlLabel value="Women" control={<Checkbox />} label="Women" />
+                            <FormControlLabel value="Kids" control={<Checkbox />} label="Kids" />
+                        </RadioGroup>
 
-                    </RadioGroup>
+                        <FormLabel id="filter">Filter By Size<hr /></FormLabel>
+                        <RadioGroup
+                            aria-labelledby="filter"
+                            defaultValue="minimum"
+                            name="size"
+                            onChange={handleFilter}
+                        >
+                            <FormControlLabel value="XSmall" control={<Checkbox />} label="XSmall" />
+                            <FormControlLabel value="Small" control={<Checkbox />} label="Small" />
+                            <FormControlLabel value="Medium" control={<Checkbox />} label="Medium" />
+                            <FormControlLabel value="Large" control={<Checkbox />} label="Large" />
+                            <FormControlLabel value="XLarge" control={<Checkbox />} label="XLarge" />
+                        </RadioGroup>
 
-                    <RadioGroup
-                        aria-labelledby="filter"
-                        defaultValue="Medium"
-                        name="radio-buttons-group"
-                    >
-                        <FormLabel id="filter">Sorting</FormLabel>
-                        <FormControlLabel value="shotbyname" control={<Radio />} label="Sort by name" />
-                        <FormControlLabel value="medium" control={<Radio />} label="Sort by price" />
-                    </RadioGroup>
-                </FormControl>
-            </Card>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            Apply
+                        </Button>
+
+                    </FormControl>
+                </Card>
+            </form>
             <div className='all__products'>
-                {products?.length > 0 && products?.map((product) => <Product key={product._id} product={product} />)}
+                {products?.length > 0 && products?.map((p) => <Product key={p._id} product={p} />)}
             </div>
         </div>
     );
 };
-
 export default Products
