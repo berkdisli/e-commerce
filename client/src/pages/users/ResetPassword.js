@@ -21,7 +21,7 @@ const ResetPassword = () => {
         {
             id: 1,
             type: 'text',
-            name: 'username',
+            name: 'email',
             required: true,
         },
     ]
@@ -37,8 +37,7 @@ const ResetPassword = () => {
             const response = await resetPassword(user)
             toast(response.data.message)
             setUser({
-                username: '',
-                password: ''
+                email: '',
             })
 
             navigate('/')

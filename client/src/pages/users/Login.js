@@ -41,11 +41,9 @@ function Login() {
 
     const handleLogin = async (e) => {
         try {
-            // console.log(user.email, user.password)
             e.preventDefault()
             const response = await loginUser(user)
             console.log(response)
-            // console.log(response)
             toast(response.data.message)
             setUser({
                 email: '',
@@ -56,11 +54,11 @@ function Login() {
             navigate('/profile')
             if (response.data.payload.user._id) {
                 dispatch(admin())
-                navigate('/admin', { state: { id: response.data.alreadyAnUser._id } })
+                navigate('/admin', { state: { id: response.data.payload.user._id } })
             }
 
-        } catch (error) {
-            toast(error)
+        } catch (err) {
+            toast(err)
         }
 
     }
