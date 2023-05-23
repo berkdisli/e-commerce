@@ -35,7 +35,7 @@ export const getRefreshToken = async () => {
 };
 
 export const resetPassword = async (user) => {
-    const response = await axios.post(`${baseURL}/api/users/refresh-password`, user)
+    const response = await axios.post(`${baseURL}/api/users/reset-password`, user)
     return response
 }
 
@@ -47,7 +47,7 @@ export const verifyPassword = async (token) => {
 // users
 
 export const updateUser = async (id, user) => {
-    const response = await axios.put(`${baseURL}/api/users/refresh-token${id}`, user)
+    const response = await axios.put(`${baseURL}/api/users/${id}`, user)
     return response
 }
 

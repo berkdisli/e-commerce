@@ -1,7 +1,9 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.css"
+
+import AdminProfile from "../pages/admin/AdminProfile";
 
 import Home from "../pages/Home";
 import Register from "../pages/users/Register";
@@ -10,6 +12,8 @@ import Activate from "../pages/users/Activate";
 import UserProfile from "../pages/users/UserProfile";
 import ResetPassword from "../pages/users/ResetPassword";
 import VerifyPassword from "../pages/users/VerifyPassword";
+import UpdateUser from "../pages/users/UpdateUser";
+
 import ProductDetails from "../pages/products/ProductDetails";
 import Products from "../pages/products/Products";
 import { CreateProduct } from "../pages/admin/CreateProduct";
@@ -33,6 +37,7 @@ const Index = () => {
                 <Route path="/profile/" element={<UserProfile />} />
                 <Route path='/reset-password' element={<ResetPassword />} />
                 <Route path='reset-password/:token' element={<VerifyPassword />} />
+                <Route path='/update/:id' element={<UpdateUser />} />
 
                 {/* products */}
                 <Route path='/products' element={<Products />} />
@@ -41,6 +46,8 @@ const Index = () => {
                 {/* admin */}
                 <Route path="/admin/createProduct" element={<CreateProduct />} />
                 <Route path="/admin/createCategory" element={<CreateCategory />} />
+                <Route path="/admin/" element={<AdminProfile />} />
+
 
             </Routes>
             <Footer />
