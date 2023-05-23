@@ -9,7 +9,7 @@ userRouter.route("/:_id")
     .delete(deleteUser);
 
 userRouter.post("/register", upload.single("image"), registerUser);
-userRouter.post("/login", isLoggedOut, loginUser);
+userRouter.post("/login", loginUser);
 userRouter.get("/logout", logoutUser);
 userRouter.post("/activate", verifyEmail);
 userRouter.post("/forget-password", forgetPassword);
