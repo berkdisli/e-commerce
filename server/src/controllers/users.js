@@ -342,10 +342,10 @@ const resetPassword = async (req, res) => {
 
         const emailData = {
             email: theUser.email,
-            subject: "Update Password",
+            subject: "Update Password Notification",
             html: `
                 <h2> Hello ${theUser.name} . </h2>
-                <p> Please click <a href="${dev.app.clientURL}/user/reset-password/${token}">here</a> to  reset your password </p>     
+                <p> Your password was successfully updated. If you are not, please report it. </p>     
                 `, // html body
         };
 
