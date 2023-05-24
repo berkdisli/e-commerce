@@ -32,18 +32,6 @@ const UpdateUser = () => {
         })
     }
 
-    const handleChange2 = async (e) => {
-        const { name, value } = e.target;
-
-        let parsedValue = value;
-        if (!isNaN(value)) {
-            parsedValue = Number(value);
-        }
-        setNewUser((prevUser) => {
-            return { ...prevUser, [name]: parsedValue };
-        });
-    };
-
     const handleSubmit = async (e) => {
         try {
             e.preventDefault()
@@ -81,7 +69,7 @@ const UpdateUser = () => {
                     <label htmlFor='email'>E-mail: </label>
                     <input type='email' required value={newUser.email} onChange={handleChange} name='email' id='email' />
                     <label htmlFor='phone'>Phone: </label>
-                    <input type='phone' required value={newUser.phone} onChange={handleChange2} name='phone' id='phone' />
+                    <input type='phone' required value={newUser.phone} onChange={handleChange} name='phone' id='phone' />
                     <button type='submit'>Update</button>
                 </form>
                 <a href='/reset-password' className="reset-update">Update password</a>

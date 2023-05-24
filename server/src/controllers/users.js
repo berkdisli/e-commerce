@@ -310,44 +310,50 @@ const forgetPassword = async (req, res) => {
 
 const resetPassword = async (req, res) => {
     try {
-        const { token } = req.body;
-        if (!token) {
-            return res.status(404).json({
-                message: "Token is missing",
-            });
+
+        const { email, password } = req.body;
+        if (password.length < 8) {
+            throw createError(400, 'The password must have at least 8 characters')
         }
 
+        const theUser = await User.findOne({ email: email });
+        if (!theUser) {
+            throw createError(400, `You need to register first`
+            )
+        }
+
+        const hashedPassword = await generateHashPassword(password)
+
         const secretKey = dev.app.jwtSecretKey
-        jwt.verify(token, secretKey, async function (err, decoded) {
-            if (err) {
-                return res.status(401).json({
-                    message: "Token is expired",
-                })
-            }
+        const token = jwt.sign({ email, hashedPassword }, secretKey, { expiresIn: '30m' })
 
-            const { email, hashedPassword } = decoded;
-            const isExist = await User.findOne({ email: email });
-            if (!isExist)
-                throw createError(400, `the user with this email doesn't exist`
-                )
+        //update data
+        const updateData = await User.updateOne({ email: email },
+            {
+                $set: {
+                    password: hashedPassword
+                }
+            })
 
-            //update data
-            const updateData = await User.updateOne({ email: email },
-                {
-                    $set: {
-                        password: hashedPassword
-                    }
-                })
+        if (!updateData) {
+            throw createError(400, `reset password process is not successfull `,
+            );
+        }
 
-            if (!updateData) {
-                throw createError(400, `reset password process is not successfull `,
-                );
-            }
+        const emailData = {
+            email: theUser.email,
+            subject: "Update Password",
+            html: `
+                <h2> Hello ${theUser.name} . </h2>
+                <p> Please click <a href="${dev.app.clientURL}/user/reset-password/${token}">here</a> to  reset your password </p>     
+                `, // html body
+        };
 
-            successResponse(res, {
-                statusCode: 201,
-                message: "your new password is successfully updated ",
-            });
+        sendEmailWithNodeMailer(emailData)
+
+        successResponse(res, {
+            statusCode: 201,
+            message: "your new password is successfully updated ",
         });
     } catch (err) {
         res.status(500).json({

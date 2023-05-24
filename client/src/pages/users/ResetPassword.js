@@ -24,6 +24,12 @@ const ResetPassword = () => {
             name: 'email',
             required: true,
         },
+        {
+            id: 2,
+            type: 'password',
+            name: 'password',
+            required: true,
+        }
     ]
 
     const inputsForm = inputs.map(input => {
@@ -38,6 +44,7 @@ const ResetPassword = () => {
             toast(response.data.message)
             setUser({
                 email: '',
+                password: ''
             })
 
             navigate('/')
