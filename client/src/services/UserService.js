@@ -25,7 +25,7 @@ export const loginUser = async (user) => {
 };
 
 export const logoutUser = async () => {
-    const response = await axios.post(`${baseURL}/api/users/logout`);
+    const response = await axios.get(`${baseURL}/api/users/logout`);
     return response.data;
 };
 

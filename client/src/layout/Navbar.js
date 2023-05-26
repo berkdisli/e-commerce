@@ -1,26 +1,27 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 
-import Login from '../pages/users/Login';
-import Logout from '../pages/users/Logout';
-
-import AppBar from '@mui/material/AppBar';
-import Link from '@mui/material/Link';
-import Box from '@mui/material/Box';
-
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Badge from '@mui/material/Badge';
-
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
+import { AppBar, Link, Box, Toolbar, Typography, Badge, Button, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
+import product from '../app/store';
+import { logoutUser } from '../services/UserService';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
+    const navigate = useNavigate()
+    const isLoggedIn = localStorage.getItem("_id")
+    const { cart } = useSelector((state) => state.product);
 
-    const loggedin = useSelector((state) => state.user.isLoggedin)
+    const handleLogout = async () => {
+        try {
+            localStorage.removeItem("_id");
+            await logoutUser();
+            navigate("/")
+        } catch (err) {
+        }
+    }
 
     return (
         <Box sx={{ flex: 1, width: '100%' }}>
@@ -43,28 +44,36 @@ const Navbar = () => {
                     <Link href="/">
                         <Button style={{ color: '#fff' }}>Home</Button>
                     </Link>
-
+                    {isLoggedIn ? (
+                        <>
+                            <Button style={{ color: '#fff' }} onClick={handleLogout}>Logout</Button>
+                            <Link href="/profile">
+                                <Button style={{ color: '#fff' }}>Profile</Button>
+                            </Link>
+                        </>
+                    ) : (
+                        <>
+                            <Link href="/register">
+                                <Button style={{ color: '#fff' }}>Register</Button>
+                            </Link>
+                            <Link href="/login">
+                                <Button style={{ color: '#fff' }}>Login</Button>
+                            </Link>
+                        </>
+                    )}
                     <Link href="/products">
                         <Button style={{ color: '#fff' }}>Products</Button>
                     </Link>
-
-                    <Link href="/register">
-                        <Button style={{ color: '#fff' }}>Register</Button>
+                    <Link to="/cart">
+                        <IconButton
+                            size="large"
+                            aria-label="change me"
+                            color="inherit" >
+                            <Badge badgeContent={cart.length}>
+                                <ShoppingCartIcon />
+                            </Badge>
+                        </IconButton>
                     </Link>
-
-                    <Link href="/login">
-                        <Button style={{ color: '#fff' }} onChange={loggedin ? <Login /> : <Logout />}>Login</Button>
-
-                    </Link>
-                    <IconButton
-                        size="large"
-                        aria-label="change me"
-                        color="inherit" >
-                        <Badge >
-                            <ShoppingCartIcon />
-                        </Badge>
-                    </IconButton>
-
                 </Toolbar>
             </AppBar>
         </Box>
