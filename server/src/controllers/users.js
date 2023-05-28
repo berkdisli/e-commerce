@@ -218,28 +218,28 @@ const verifyEmail = async (req, res) => {
     }
 };
 
-const logoutUser = async (req, res, next) => {
+const logoutUser = (req, res) => {
     try {
-        if (!req.headers.cookie) {
-            throw createError(404, 'no cookie was found')
-        }
-        const token = req.headers.cookie.split('=')[1]
-
-        if (!token) {
-            throw createError(404, 'no token was found')
-        }
-        const jwtAuthorizationKey = dev.app.jwtAuthorizationKey
-        const decoded = jwt.verify(token, jwtAuthorizationKey)
+        const obj = req.cookies
+        if (!req.cookies) throw createError(404, 'no cookie found')
+        const obj1 = Object.values(obj)
+        const token = obj1[0]
+        if (!token) throw createError(404, 'no token found')
+        const decoded = jwt.verify(
+            String(token),
+            String(dev.app.jwtAuthorizationKey)
+        )
         if (!decoded) throw createError(403, 'Invalid Token')
-
-        if (req.cookies[`${decoded._id}`]) {
-            req.cookies[`${decoded._id}`] = ''
+        if (req.cookies[`${decoded.id}`]) {
+            req.cookies[`${decoded.id}`] = ''
         }
-
-        res.clearCookie(`${decoded._id}`)
-        successResponse(res, {
+        res.clearCookie(`${decoded.id}`, {
+            sameSite: 'none',
+            secure: true,
+        })
+        return successResponse(res, {
             statusCode: 201,
-            message: 'user is logged-out'
+            message: 'User was logged out!'
         })
     } catch (error) {
         next(error)
@@ -354,6 +354,7 @@ const resetPassword = async (req, res) => {
         successResponse(res, {
             statusCode: 201,
             message: "your new password is successfully updated ",
+            payload: { token: token }
         });
     } catch (err) {
         res.status(500).json({

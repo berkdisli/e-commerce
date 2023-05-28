@@ -7,7 +7,6 @@ let Product = require("../model/productModel")
 const getAllProducts = async (req, res) => {
     try {
         const products = await Product.find().populate('category');
-        console.log(products)
         return successResponse(res, {
             statusCode: 201,
             message: "all products returned",
@@ -22,16 +21,16 @@ const getAllProducts = async (req, res) => {
 
 const getSingleProduct = async (req, res) => {
     try {
+        const { slug } = req.params
         const product = await Product.findOne({ slug: slug });
 
         if (!product) {
             throw createError(404, 'this product was not found')
         }
-
         return successResponse(res, {
             statusCode: 201,
             message: "single product returned",
-            product: product
+            payload: { product: product }
         })
     } catch (err) {
         return res.status(500).json({
