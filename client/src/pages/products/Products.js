@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet';
+import { useNavigate } from 'react-router-dom'
 
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { useAppDispatch } from '../../app/hooks';
 import { filter } from '../../features/productSlice';
 import { getAllProducts } from '../../services/ProductService';
 
@@ -10,6 +11,7 @@ import Product from './Product';
 import { Button, Card, Checkbox, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 
 const Products = () => {
+    const navigate = useNavigate()
     const dispatch = useAppDispatch();
     const [products, setProducts] = useState([{ _id: '' }])
 
@@ -34,12 +36,16 @@ const Products = () => {
         dispatch(filter(filterBody))
     }
 
+    const handleBackClick = () => {
+        navigate(-1);
+    };
 
     return (
         <div className='products'>
             <Helmet>
                 <title>Products Page</title>
             </Helmet>
+            <button onClick={handleBackClick}>Back</button>
             <form onSubmit={applyFilter}>
                 <Card sx={{ minWidth: 200, minHeight: 500 }}>
                     <FormControl >
@@ -90,7 +96,6 @@ const Products = () => {
                         >
                             Apply
                         </Button>
-
                     </FormControl>
                 </Card>
             </form>

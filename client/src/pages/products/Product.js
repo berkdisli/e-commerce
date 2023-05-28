@@ -11,7 +11,7 @@ const Product = (props) => {
 
     const navigate = useNavigate();
     const handleDetailsPage = (slug) => {
-        navigate(`/product/${slug}`)
+        navigate(`/products/${slug}`)
     }
 
     const { name, image, price, slug } = props.product;

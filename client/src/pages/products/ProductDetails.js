@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet';
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import { getSingleProduct } from '../../services/ProductService';
 
 const ProductDetails = () => {
+    const navigate = useNavigate()
     const { slug } = useParams();
     const [product, setProduct] = useState({
         name: '',
@@ -11,12 +13,12 @@ const ProductDetails = () => {
         price: 0,
         image: 'image',
     });
-    const imageUrl = 'http://localhost:8080/product/image/'
+    const imageUrl = 'http://localhost:8080/image/'
 
     const fetchProductDetails = async () => {
         try {
-            const result = await getSingleProduct(slug);
-            setProduct(result.product);
+            const response = await getSingleProduct(slug);
+            setProduct(response.data.payload.product);
         } catch (err) {
             toast.error(err.response.data.message)
         }
@@ -25,15 +27,23 @@ const ProductDetails = () => {
         fetchProductDetails()
     }, []);
 
+    const handleBackClick = () => {
+        navigate(-1);
+    };
+
     return (
         <div >
+            <Helmet>
+                <title>Product Details Page</title>
+            </Helmet>
+            <button onClick={handleBackClick}>Back</button>
             {product && (
                 <div className='product'>
-                    <img className='image' src={`${imageUrl}${product.image}`} alt={product.name} />
+                    <img className='image' src={`${imageUrl}${product.image}`} alt={product.slug} />
                     <h2> {product.name} </h2>
                     <p> {product.description} </p>
                     <p> {product.price} </p>
-                    <button>add to the cart</button>
+                    <button>Add to the cart</button>
                 </div>
             )}
         </div>

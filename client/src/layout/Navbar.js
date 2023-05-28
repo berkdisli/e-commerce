@@ -68,8 +68,8 @@ const Navbar = () => {
                         <IconButton
                             size="large"
                             aria-label="change me"
-                            color="inherit" >
-                            <Badge badgeContent={cart.length}>
+                            color="#ffffff" >
+                            <Badge badgeContent={cart.length} color="primary">
                                 <ShoppingCartIcon />
                             </Badge>
                         </IconButton>

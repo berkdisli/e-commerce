@@ -18,6 +18,7 @@ import ProductDetails from "../pages/products/ProductDetails";
 import Products from "../pages/products/Products";
 import { CreateProduct } from "../pages/admin/CreateProduct";
 import { CreateCategory } from "../pages/admin/CreateCategory";
+import Cart from "../pages/Cart";
 
 import Navbar from "../layout/Navbar";
 import Footer from "../layout/Footer";
@@ -42,11 +43,12 @@ const Index = () => {
                 {/* products */}
                 <Route path='/products' element={<Products />} />
                 <Route path='/products/:slug' element={<ProductDetails />} />
+                <Route path='/cart' element={<Cart />} />
 
                 {/* admin */}
-                <Route path="/admin/createProduct" element={<CreateProduct />} />
-                <Route path="/admin/createCategory" element={<CreateCategory />} />
-                <Route path="/admin/" element={<AdminProfile />} />
+                <Route path='/admin/createProduct' element={<CreateProduct />} />
+                <Route path='/admin/createCategory' element={<CreateCategory />} />
+                <Route path='/admin/' element={<AdminProfile />} />
 
 
             </Routes>
