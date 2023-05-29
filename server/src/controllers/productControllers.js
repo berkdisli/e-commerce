@@ -123,7 +123,7 @@ const updateProduct = async (req, res) => {
     }
 }
 
-const deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res, next) => {
     try {
         const { slug } = req.params
         const deleteTheProduct = await Product.findOneAndDelete({ slug: slug })

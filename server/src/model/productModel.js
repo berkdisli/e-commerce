@@ -43,8 +43,7 @@ const productSchema = new Schema({
         required: false,
     },
     image: {
-        type: String,
-        default: "../../public/images/1681998504104-portfolio.png",
+        type: String
     },
 },
     { timestamps: true }

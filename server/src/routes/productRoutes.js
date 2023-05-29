@@ -10,12 +10,12 @@ const productRouter = express.Router();
 
 productRouter.route("/")
     .get(getAllProducts)
-    .post(runValidation, upload.single('image'), createProduct);
+    .post(upload.single('image'), createProduct);
 
 productRouter.route("/:slug")
-    .get(runValidation, getSingleProduct)
-    .put(runValidation, upload.single('image'), updateProduct)
-    .delete(runValidation, deleteProduct);
+    .get(getSingleProduct)
+    .put(upload.single('image'), updateProduct)
+    .delete(deleteProduct);
 
 productRouter.get('/search', searchProducts)
 productRouter.post('/filter', filterProducts)

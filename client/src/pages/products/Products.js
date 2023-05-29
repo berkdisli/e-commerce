@@ -26,12 +26,12 @@ const Products = () => {
 
     const [filterBody, setFilterBody] = useState({});
 
-    const handleFilter = (e) => {
-        setFilterBody({ ...filterBody, [e.target.name]: e.target.name === 'price' ? e.target.value.split('-') : e.target.value })
+    const handleFilter = (event) => {
+        setFilterBody({ ...filterBody, [event.target.name]: event.target.name === 'price' ? event.target.value.split('-') : event.target.value })
     }
 
-    const applyFilter = (e) => {
-        e.preventDefault();
+    const applyFilter = (event) => {
+        event.preventDefault();
         console.log(filterBody)
         dispatch(filter(filterBody))
     }
@@ -63,7 +63,7 @@ const Products = () => {
                             <FormControlLabel value="500-1000" name="price" control={<Radio />} label="500€-1000€" />
                         </RadioGroup>
 
-                        <FormLabel id="filter">Filter By Gender<hr /></FormLabel>
+                        {/* <FormLabel id="filter">Filter By Gender<hr /></FormLabel>
                         <RadioGroup
                             aria-labelledby="filter"
                             defaultValue="minimum"
@@ -87,7 +87,7 @@ const Products = () => {
                             <FormControlLabel value="Medium" control={<Checkbox />} label="Medium" />
                             <FormControlLabel value="Large" control={<Checkbox />} label="Large" />
                             <FormControlLabel value="XLarge" control={<Checkbox />} label="XLarge" />
-                        </RadioGroup>
+                        </RadioGroup> */}
 
                         <Button
                             type="submit"
@@ -100,7 +100,7 @@ const Products = () => {
                 </Card>
             </form>
             <div className='all__products'>
-                {products?.length > 0 && products?.map((p) => <Product key={p._id} product={p} />)}
+                {products?.length > 0 && products?.map((product) => <Product key={product._id} product={product} />)}
             </div>
         </div>
     );

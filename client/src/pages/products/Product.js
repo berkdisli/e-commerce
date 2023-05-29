@@ -1,26 +1,59 @@
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+import { addToCart, addToFavorite, removeFromFavorite } from '../../features/productSlice';
+import { deleteProduct } from '../../services/ProductService';
+import { useAppDispatch } from '../../app/hooks';
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import DeleteForever from '@mui/icons-material/DeleteForever'
+import Edit from '@mui/icons-material/Edit'
+import MoreVert from '@mui/icons-material/MoreVert'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+
 
 const Product = (props) => {
 
     const navigate = useNavigate();
+
+    const { product } = props;
+    const { _id, name, image, price, slug } = product;
+
+    const imageUrl = 'http://localhost:8080/image/' + image;
+    const dispatch = useAppDispatch();
+    const { favorite } = useSelector((state) => state.product);
+
     const handleDetailsPage = (slug) => {
         navigate(`/products/${slug}`)
     }
 
-    const { name, image, price, slug } = props.product;
+    const handleFavorite = () => {
+        dispatch(addToFavorite(_id))
 
-    const imageUrl = `http://localhost:8080/images/products/1684350838245-jean.jpg`;
+    }
+
+    const handleCart = () => {
+        dispatch(addToCart(product))
+    }
+
+    const handleDelete = async () => {
+        const result = window.confirm("Want to delete?")
+        if (result) {
+            deleteProduct(slug)
+        }
+        navigate(`/products`)
+    }
 
     return (
         <div className='product'>
-            <Card sx={{ maxWidth: 250, maxHeight: 270, display: 'flex', flexDirection: 'column' }}>
+
+            <Card sx={{ maxWidth: 250, maxHeight: 270 }}>
+
                 <CardMedia
                     sx={{ height: 100, width: 100 }}
                     image={imageUrl}
@@ -32,13 +65,16 @@ const Product = (props) => {
                     <Typography color="text.secondary" variant="body2">
                         price : € {price}
                     </Typography>
-                    <Typography color="text.secondary" variant="body2">
-                        <img src={`http://localhost:8080/${image}`} alt={name} />
-                    </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button size="small" onClick={() => { handleDetailsPage(slug) }}>View more</Button>
-                    <Button size="small">Add to cart</Button>
+                    <FavoriteIcon color={favorite.includes(slug) ? 'primary' : 'black'} onClick={handleFavorite} cursor='pointer' />
+                    <ShoppingCartIcon onClick={handleCart} cursor='pointer' />
+
+                    <>
+                        <DeleteForever onClick={() => handleDelete()} cursor='pointer' />
+                    </>
+
+                    <MoreVert onClick={() => { handleDetailsPage(slug) }} cursor='pointer' />
                 </CardActions>
             </Card>
         </div>
