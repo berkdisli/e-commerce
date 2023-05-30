@@ -32,7 +32,7 @@ export const getSearchedProducts = async (searchValue = '', searchPage) => {
     return response.data;
 };
 
-export const getFilteredProducts = async (checkedCategory, checkedPrice) => {
-    const response = await axios.post(`${baseURL}/api/products/filter`, { checkedCategory, checkedPrice });
+export const getFilteredProducts = async (product) => {
+    const response = await axios.post(`${baseURL}/api/products/filter`, product);
     return response.data;
-};
+}

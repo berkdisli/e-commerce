@@ -1,18 +1,70 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
+import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
-import { AppBar, Link, Box, Toolbar, Typography, Badge, Button, IconButton } from '@mui/material';
+import { AppBar, Link, Box, Toolbar, Typography, Badge, Button, IconButton, Input } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import { styled, alpha } from '@mui/material/styles';
 
 import product from '../app/store';
 import { logoutUser } from '../services/UserService';
-import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../app/hooks';
+import { filter } from '../features/productSlice';
+import { getSearchedProducts } from '../services/ProductService';
 
 const Navbar = () => {
     const navigate = useNavigate()
+    const dispatch = useAppDispatch();
+    const location = useLocation();
+
     const isLoggedIn = localStorage.getItem("_id")
-    const { cart } = useSelector((state) => state.product);
+    const { favorite, cart } = useSelector((state) => state.product);
+
+    const [page, setPage] = useState(1)
+    const [products, setProducts] = useState([])
+    const [searchPage, setSearchPage] = useState(1)
+    const [searchValue, setSearchValue] = useState('')
+
+    const fetchSearchedProducts = async () => {
+        try {
+            const response = await getSearchedProducts(searchValue, searchPage)
+            setProducts(response.payload.products);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                toast(error);
+            } else {
+                toast("An error occurred");
+            }
+        }
+    }
+    useEffect(() => {
+        if (searchValue.length === 0) return;
+        fetchSearchedProducts();
+    }, [searchValue])
+
+    const loadMoreSearchProducts = async () => {
+        try {
+            const response = await getSearchedProducts(searchValue, searchPage)
+            setProducts((prevState) => { return [...prevState, ...response.payload.products]; });
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                toast(error);
+            } else {
+                toast("An error occurred");
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (searchPage === 1) return;
+        loadMoreSearchProducts()
+    }, [searchPage])
+
+
 
     const handleLogout = async () => {
         try {
@@ -40,7 +92,10 @@ const Navbar = () => {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         e-commerce
                     </Typography>
+                    <Input placeholder='Search...' id="my-input" aria-describedby="my-helper-text" sx={{ mt: 5, width: '200px' }} inputProps={{ maxLength: 200 }} onChange={(event) => setSearchValue(event.target.value)} />
 
+                    {searchValue.length === 0 && <Button variant="contained" onClick={(() => setPage(page + 1))}>Load More...</Button>}
+                    {searchValue.length > 0 && <Button variant="contained" onClick={(() => setSearchPage(searchPage + 1))}>Load More...</Button>}
                     <Link href="/">
                         <Button style={{ color: '#fff' }}>Home</Button>
                     </Link>
@@ -64,16 +119,25 @@ const Navbar = () => {
                     <Link href="/products">
                         <Button style={{ color: '#fff' }}>Products</Button>
                     </Link>
-                    <Link to="/cart">
-                        <IconButton
-                            size="large"
-                            aria-label="change me"
-                            color="#ffffff" >
-                            <Badge badgeContent={cart.length} color="primary">
-                                <ShoppingCartIcon />
-                            </Badge>
-                        </IconButton>
-                    </Link>
+                    <IconButton
+                        size="large"
+                        aria-label="change me"
+                        color="inherit" >
+                        <Badge badgeContent={favorite.length} color="secondary">
+                            <FavoriteIcon style={{ color: '#fff' }} />
+                        </Badge>
+                    </IconButton>
+                    <IconButton
+                        size="large"
+                        aria-label="change me"
+                        color="#ffffff" >
+                        <Badge badgeContent={cart.length} color="primary">
+                            <Link href="/cart">
+                                <ShoppingCartIcon style={{ color: '#fff' }} />
+                            </Link>
+                        </Badge>
+                    </IconButton>
+
                 </Toolbar>
             </AppBar>
         </Box>

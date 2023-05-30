@@ -26,7 +26,7 @@ const Product = (props) => {
 
     const imageUrl = 'http://localhost:8080/image/' + image;
     const dispatch = useAppDispatch();
-    const { favorite } = useSelector((state) => state.product);
+    const { favorite, cart } = useSelector((state) => state.product);
 
     const handleDetailsPage = (slug) => {
         navigate(`/products/${slug}`)
@@ -34,7 +34,6 @@ const Product = (props) => {
 
     const handleFavorite = () => {
         dispatch(addToFavorite(_id))
-
     }
 
     const handleCart = () => {
@@ -67,13 +66,9 @@ const Product = (props) => {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <FavoriteIcon color={favorite.includes(slug) ? 'primary' : 'black'} onClick={handleFavorite} cursor='pointer' />
-                    <ShoppingCartIcon onClick={handleCart} cursor='pointer' />
-
-                    <>
-                        <DeleteForever onClick={() => handleDelete()} cursor='pointer' />
-                    </>
-
+                    <FavoriteIcon color={favorite.includes(_id) ? 'secondary' : 'black'} onClick={handleFavorite} cursor='pointer' />
+                    <ShoppingCartIcon color={cart.includes(product) ? 'primary' : 'black'} onClick={handleCart} cursor='pointer' />
+                    <DeleteForever onClick={() => handleDelete()} cursor='pointer' />
                     <MoreVert onClick={() => { handleDetailsPage(slug) }} cursor='pointer' />
                 </CardActions>
             </Card>
