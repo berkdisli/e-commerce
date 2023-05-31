@@ -5,10 +5,11 @@ import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../app/hooks';
 import { filter } from '../../features/productSlice';
 import { getAllProducts } from '../../services/ProductService';
-
+import { theme } from '../../layout/Theme'
 import Product from './Product';
 
 import { Button, Card, Checkbox, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
 
 const Products = () => {
     const navigate = useNavigate()
@@ -41,29 +42,30 @@ const Products = () => {
     };
 
     return (
-        <div className='products'>
-            <Helmet>
-                <title>Products Page</title>
-            </Helmet>
-            <button onClick={handleBackClick}>Back</button>
-            <form onSubmit={applyFilter}>
-                <Card sx={{ minWidth: 200, minHeight: 500 }}>
-                    <FormControl >
-                        <FormLabel id="filter">Filter By Price<hr /></FormLabel>
-                        <RadioGroup
-                            aria-labelledby="filter"
-                            defaultValue="minimum"
-                            name="price"
-                            onChange={handleFilter}
-                        >
-                            <FormControlLabel value="0-50" name="price" control={<Radio />} label="0-50€" />
-                            <FormControlLabel value="50-100" name="price" control={<Radio />} label="50€-100€" />
-                            <FormControlLabel value="100-200" name="price" control={<Radio />} label="100€-200€" />
-                            <FormControlLabel value="200-500" name="price" control={<Radio />} label="200€-500€" />
-                            <FormControlLabel value="500-1000" name="price" control={<Radio />} label="500€-1000€" />
-                        </RadioGroup>
+        <ThemeProvider theme={theme}>
+            <div className='products'>
+                <Helmet>
+                    <title>Products Page</title>
+                </Helmet>
+                <button onClick={handleBackClick}>Back</button>
+                <form onSubmit={applyFilter}>
+                    <Card sx={{ minWidth: 200, minHeight: 500 }}>
+                        <FormControl >
+                            <FormLabel id="filter">Filter By Price<hr /></FormLabel>
+                            <RadioGroup
+                                aria-labelledby="filter"
+                                defaultValue="minimum"
+                                name="price"
+                                onChange={handleFilter}
+                            >
+                                <FormControlLabel value="0-50" name="price" control={<Radio />} label="0-50€" />
+                                <FormControlLabel value="50-100" name="price" control={<Radio />} label="50€-100€" />
+                                <FormControlLabel value="100-200" name="price" control={<Radio />} label="100€-200€" />
+                                <FormControlLabel value="200-500" name="price" control={<Radio />} label="200€-500€" />
+                                <FormControlLabel value="500-1000" name="price" control={<Radio />} label="500€-1000€" />
+                            </RadioGroup>
 
-                        {/* <FormLabel id="filter">Filter By Gender<hr /></FormLabel>
+                            {/* <FormLabel id="filter">Filter By Gender<hr /></FormLabel>
                         <RadioGroup
                             aria-labelledby="filter"
                             defaultValue="minimum"
@@ -89,20 +91,21 @@ const Products = () => {
                             <FormControlLabel value="XLarge" control={<Checkbox />} label="XLarge" />
                         </RadioGroup> */}
 
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            Apply
-                        </Button>
-                    </FormControl>
-                </Card>
-            </form>
-            <div className='all__products'>
-                {products?.length > 0 && products?.map((product) => <Product key={product._id} product={product} />)}
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                Apply
+                            </Button>
+                        </FormControl>
+                    </Card>
+                </form>
+                <div className='all__products'>
+                    {products?.length > 0 && products?.map((product) => <Product key={product._id} product={product} />)}
+                </div>
             </div>
-        </div>
+        </ThemeProvider>
     );
 };
 export default Products

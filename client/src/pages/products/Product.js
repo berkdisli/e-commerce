@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { addToCart, addToFavorite, removeFromFavorite } from '../../features/productSlice';
 import { deleteProduct } from '../../services/ProductService';
 import { useAppDispatch } from '../../app/hooks';
+import { theme } from '../../layout/Theme'
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -15,6 +16,7 @@ import DeleteForever from '@mui/icons-material/DeleteForever'
 import Edit from '@mui/icons-material/Edit'
 import MoreVert from '@mui/icons-material/MoreVert'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { ThemeProvider } from '@mui/material/styles';
 
 
 const Product = (props) => {
@@ -49,30 +51,28 @@ const Product = (props) => {
     }
 
     return (
-        <div className='product'>
-
-            <Card sx={{ maxWidth: 250, maxHeight: 270 }}>
-
-                <CardMedia
-                    sx={{ height: 100, width: 100 }}
-                    image={imageUrl}
-                />
-                <CardContent>
-                    <Typography gutterBottom component="div">
+        <ThemeProvider theme={theme}>
+            <div className='product'>
+                <Card sx={{ maxWidth: 250, maxHeight: 270 }}>
+                    <CardMedia
+                        sx={{ height: 100, width: 100 }}
+                        image={imageUrl}
+                    />
+                    <CardContent>
                         {name}
-                    </Typography>
-                    <Typography color="text.secondary" variant="body2">
-                        price : € {price}
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <FavoriteIcon color={favorite.includes(_id) ? 'secondary' : 'black'} onClick={handleFavorite} cursor='pointer' />
-                    <ShoppingCartIcon color={cart.includes(product) ? 'primary' : 'black'} onClick={handleCart} cursor='pointer' />
-                    <DeleteForever onClick={() => handleDelete()} cursor='pointer' />
-                    <MoreVert onClick={() => { handleDetailsPage(slug) }} cursor='pointer' />
-                </CardActions>
-            </Card>
-        </div>
+                        <Typography color="text.secondary" variant="body2">
+                            price : € {price}
+                        </Typography>
+                    </CardContent>
+                    <CardActions>
+                        <FavoriteIcon color={favorite.includes(_id) ? 'secondary' : 'black'} onClick={handleFavorite} cursor='pointer' />
+                        <ShoppingCartIcon color={cart.includes(product) ? 'primary' : 'black'} onClick={handleCart} cursor='pointer' />
+                        <DeleteForever onClick={() => handleDelete()} cursor='pointer' />
+                        <MoreVert onClick={() => { handleDetailsPage(slug) }} cursor='pointer' />
+                    </CardActions>
+                </Card>
+            </div>
+        </ThemeProvider>
     );
 }
 
