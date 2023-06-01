@@ -1,8 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-import { createProduct } from '../../services/ProductService';
+import { createProduct, updateProduct } from '../../services/ProductService';
 import { allCategories } from '../../features/categorySlice';
+import { theme } from '../../layout/Theme'
 
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,11 +14,12 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { FormLabel, Input, MenuItem, Select } from '@mui/material';
+import { getAllCategories } from '../../services/CategoryService';
 
-const theme = createTheme();
 export const CreateProduct = () => {
+    const { slug } = useParams();
     const [product, setProduct] = useState({
         name: '',
         slug: '',
@@ -28,12 +32,16 @@ export const CreateProduct = () => {
         image: ''
     })
     const dispatch = useDispatch();
-    const { categories } = useSelector((state) => state.category);
-    const { category } = categories;
+    const [categories, setCategories] = useState([{ _id: '' }])
+
+    const fetchAllCategories = async () => {
+        const result = await getAllCategories();
+        setCategories(result.payload.category);
+    }
 
     useEffect(() => {
-        dispatch(allCategories())
-    }, [dispatch])
+        fetchAllCategories()
+    }, [])
 
     const handleChange = (event) => {
         const { name, value, files } = event.target;
@@ -46,22 +54,18 @@ export const CreateProduct = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const data = await createProduct(product)
-        console.log(data)
-
-        setProduct({
-            name: '',
-            slug: '',
-            description: '',
-            price: 0,
-            category: '',
-            inStock: 0,
-            sold: 0,
-            size: '',
-            image: '',
-        })
-    };
-
+        try {
+            if (slug) {
+                const updateResponse = await updateProduct(slug, product);
+                toast.success(updateResponse.message)
+            } else {
+                const createResponse = await createProduct(product)
+                toast.success(createResponse.message)
+            }
+        } catch (err) {
+            toast.error(err?.message)
+        }
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -76,10 +80,23 @@ export const CreateProduct = () => {
                     }}
                 >
                     <Typography component="h1" variant="h5" >
-                        Create Product
+                        {slug ? 'Update' : 'Create'} Product
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }} >
                         <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <FormLabel>Category</FormLabel>
+                                <Select
+                                    id="category"
+                                    name="category"
+                                    required
+                                    type='Object'
+                                    fullWidth
+                                    defaultValue=""
+                                    onChange={handleChange} >
+                                    {categories?.map((category) => <MenuItem key={category?._id} value={category?._id}>{category?.name}</MenuItem>)}
+                                </Select>
+                            </Grid>
                             <Grid item xs={12}>
                                 <TextField
                                     autoComplete="given-name"
@@ -87,7 +104,7 @@ export const CreateProduct = () => {
                                     required
                                     fullWidth
                                     id="name"
-                                    label="Product name"
+                                    label="Name"
                                     autoFocus
                                     onChange={handleChange}
                                 />
@@ -96,7 +113,7 @@ export const CreateProduct = () => {
                                 <TextField
                                     required
                                     fullWidth
-                                    label="Product description"
+                                    label="Description"
                                     multiline
                                     rows={4}
                                     placeholder="Enter text here"
@@ -111,30 +128,18 @@ export const CreateProduct = () => {
                                     required
                                     fullWidth
                                     name="price"
-                                    label="Product price"
+                                    label="Price"
                                     type="number"
                                     id="price"
                                     onChange={handleChange}
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <FormLabel>Product category</FormLabel>
-                                <Select
-                                    id="category"
-                                    name="category"
-                                    required
-                                    defaultValue=""
-                                    onChange={handleChange} >
-                                    {category?.map((c) => <MenuItem key={c?._id} value={c?._id}>{c?.name}</MenuItem>)}
-
-                                </Select>
-                            </Grid>
-                            <Grid item xs={12}>
                                 <TextField
                                     required
                                     fullWidth
                                     name="inStock"
-                                    label="inStock"
+                                    label="In stock"
                                     id="inStock"
                                     onChange={handleChange}
                                 />
@@ -144,7 +149,7 @@ export const CreateProduct = () => {
                                     required
                                     fullWidth
                                     name="sold"
-                                    label="Product sold"
+                                    label="Sold"
                                     type="number"
                                     id="sold"
                                     onChange={handleChange}
@@ -156,12 +161,11 @@ export const CreateProduct = () => {
                                     fullWidth
                                     name="size"
                                     label="Product size"
-                                    type="number"
+                                    type="string"
                                     id="size"
                                     onChange={handleChange}
                                 />
                             </Grid>
-
                             <Grid item xs={12}>
                                 <FormLabel>product image</FormLabel>
                                 <Input
@@ -178,7 +182,7 @@ export const CreateProduct = () => {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Create product
+                            {slug ? 'Update' : 'Create'} Product
                         </Button>
                     </Box>
                 </Box>

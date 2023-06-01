@@ -47,6 +47,7 @@ const Index = () => {
 
                 {/* admin */}
                 <Route path='/admin/createProduct' element={<CreateProduct />} />
+                <Route path='/admin/updateProduct/:slug' element={<CreateProduct />} />
                 <Route path='/admin/createCategory' element={<CreateCategory />} />
                 <Route path='/admin/' element={<AdminProfile />} />
 

@@ -13,11 +13,7 @@ const initialState = {
 export const categorySlice = createSlice({
     name: 'categories',
     initialState,
-    reducers: {
-        search: (state, action) => {
-
-        }
-    },
+    reducers: {},
     extraReducers: (builder) => {
 
         builder.addCase(allCategories.fulfilled, (state, action) => {

@@ -107,7 +107,11 @@ const Navbar = () => {
                                 <Link href="/profile">
                                     <Button style={{ color: '#fff' }}>Profile</Button>
                                 </Link>
+                                <Link href="/admin/createProduct">
+                                    <Button style={{ color: '#fff' }}>Create Product</Button>
+                                </Link>
                             </>
+
                         ) : (
                             <>
                                 <Link href="/register">
