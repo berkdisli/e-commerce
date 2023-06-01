@@ -10,9 +10,12 @@ const createCategory = async (req, res, next) => {
         if (!name) {
             throw createError(400, 'name cannot be empty')
         }
+        const image = req?.file?.filename
+
         const newCategory = await Category.create({
             name: name,
-            slug: slugify(name)
+            slug: slugify(name),
+            image: image
         });
 
         const categoryData = await newCategory.save()

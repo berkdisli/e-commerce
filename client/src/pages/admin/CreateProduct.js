@@ -31,7 +31,7 @@ export const CreateProduct = () => {
         size: '',
         image: ''
     })
-    const dispatch = useDispatch();
+
     const [categories, setCategories] = useState([{ _id: '' }])
 
     const fetchAllCategories = async () => {

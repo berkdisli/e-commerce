@@ -10,11 +10,11 @@ const categoryRouter = express.Router();
 
 categoryRouter.route("/")
     .get(runValidation, getAllCategories)
-    .post(validateCategory, runValidation, createCategory);
+    .post(runValidation, createCategory);
 
 categoryRouter.route("/:slug")
     .get(runValidation, getSingleCategory)
-    .put(validateCategory, runValidation, updateCategory)
+    .put(runValidation, updateCategory)
     .delete(runValidation, deleteCategory);
 
 module.exports = categoryRouter;

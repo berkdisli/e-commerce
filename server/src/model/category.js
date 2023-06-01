@@ -15,6 +15,9 @@ const categorySchema = new Schema({
         lowercase: true,
         unique: true
     },
+    image: {
+        type: String
+    }
 },
     { timestamps: true }
 )

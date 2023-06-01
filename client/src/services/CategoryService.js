@@ -13,8 +13,9 @@ export const getSingleCategory = async (slug) => {
 }
 
 export const createCategory = async (category) => {
-    const response = await axios.post(`${baseURL}/api/categories/`, category)
-    return response
+    const response = await axios.post(`${baseURL}/api/categories`, category, {
+    });
+    return response.data;
 }
 
 export const updateCategory = async (slug) => {

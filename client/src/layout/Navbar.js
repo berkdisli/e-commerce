@@ -110,6 +110,9 @@ const Navbar = () => {
                                 <Link href="/admin/createProduct">
                                     <Button style={{ color: '#fff' }}>Create Product</Button>
                                 </Link>
+                                <Link href="/admin/createCategory">
+                                    <Button style={{ color: '#fff' }}>Create Category</Button>
+                                </Link>
                             </>
 
                         ) : (

@@ -1,41 +1,59 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from "react-toastify";
-import { createCategory } from '../../services/CategoryService';
+import { useParams } from 'react-router-dom';
 
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createCategory, updateCategory, getSingleCategory } from '../../services/CategoryService';
+import { theme } from '../../layout/Theme'
 
+import { ThemeProvider } from '@mui/material/styles';
+import { FormLabel, Input, Button, TextField, Grid, Box, Typography, Container, CssBaseline } from '@mui/material';
 
-const theme = createTheme();
 export const CreateCategory = () => {
-    const [name, setName] = useState({});
+    const [category, setCategory] = useState({
+        name: '',
+        slug: '',
+        image: '',
+    })
+
+
+    const { slug } = useParams();
+    //fetch single category
+    const fetchCategory = async (slug) => {
+        const singleCategory = await getSingleCategory(slug)
+        setCategory(singleCategory?.category)
+    }
+
+    useEffect(() => {
+        if (slug) {
+            fetchCategory(slug)
+        }
+    }, [slug])
+
 
     const handleChange = (event) => {
-        setName(event.target.value);
+        const { name, value, files } = event.target;
+        setCategory({
+            ...category,
+            [name]: name === 'image' ? files[0] : value,
+        });
+
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-
         try {
-            const newCategory = new FormData();
-            newCategory.append("name", name);
-
-            const response = await createCategory(newCategory);
-            toast.success(response.message);
-            setName("");
-
+            if (slug) {
+                const updateResponse = await updateCategory(slug, category);
+                toast.success(updateResponse.message)
+            } else {
+                const createResponse = await createCategory(category)
+                toast.success(createResponse.message)
+            }
         } catch (err) {
-            toast.error(err.response.data.error.message);
+            toast.error(err?.message)
         }
     };
+
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
@@ -49,7 +67,7 @@ export const CreateCategory = () => {
                     }}
                 >
                     <Typography component="h1" variant="h5" >
-                        Create Category
+                        {slug ? 'Update' : 'Create'} Category
                     </Typography>
                     <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleSubmit} >
                         <Grid container spacing={2}>
@@ -63,6 +81,17 @@ export const CreateCategory = () => {
                                     label="category name"
                                     autoFocus
                                     onChange={handleChange}
+                                    value={category?.name}
+                                />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <FormLabel>Category image</FormLabel>
+                                <Input
+                                    type="file"
+                                    id="image"
+                                    name="image"
+                                    onChange={handleChange}
                                 />
                             </Grid>
                         </Grid>
@@ -72,11 +101,13 @@ export const CreateCategory = () => {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Create Category
+                            {slug ? 'Update' : 'Create'} Category
                         </Button>
+
                     </Box>
                 </Box>
             </Container>
         </ThemeProvider>
     )
 }
+
