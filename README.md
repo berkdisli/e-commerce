@@ -1,4 +1,4 @@
-# Fullstack project - e commerce
+# Fullstack project - e-commerce
 
 ## Installation
 
