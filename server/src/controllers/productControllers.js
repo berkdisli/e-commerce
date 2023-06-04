@@ -199,7 +199,8 @@ const filterProducts = async (req, res, next) => {
         const filterResult = await Product.find(filter)
         return successResponse(res, {
             statusCode: 201,
-            message: 'product return successfully', product: filterResult
+            message: 'product return successfully',
+            payload: { products: filterResult }
         })
     } catch (error) {
         next(error)

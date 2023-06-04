@@ -15,6 +15,7 @@ const Products = () => {
     const navigate = useNavigate()
     const dispatch = useAppDispatch();
     const [products, setProducts] = useState([{ _id: '' }])
+    const [filterBody, setFilterBody] = useState({});
 
     const fetchAllProducts = async () => {
         const result = await getAllProducts();
@@ -25,7 +26,6 @@ const Products = () => {
         fetchAllProducts()
     }, [])
 
-    const [filterBody, setFilterBody] = useState({});
 
     const handleFilter = (event) => {
         setFilterBody({ ...filterBody, [event.target.name]: event.target.name === 'price' ? event.target.value.split('-') : event.target.value })
@@ -34,7 +34,7 @@ const Products = () => {
     const applyFilter = (event) => {
         event.preventDefault();
         console.log(filterBody)
-        dispatch(filter(filterBody))
+        dispatch(filter(filterBody.product))
     }
 
     const handleBackClick = () => {
