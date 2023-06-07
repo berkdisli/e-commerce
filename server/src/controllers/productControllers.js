@@ -138,55 +138,12 @@ const deleteProduct = async (req, res, next) => {
     }
 }
 
-const searchProducts = async (req, res, next) => {
-    try {
-        const { page = 1, limit = 3 } = req.query
-        const searchValue =
-            typeof req.query.searchValue === 'string'
-                ? req.query.searchValue.trim()
-                : ''
-        let filter = {}
-        const searchRegExpr = new RegExp('.*' + searchValue + '.*', 'i')
-        if (searchValue) {
-            filter = {
-                $or: [
-                    { name: { $regex: searchRegExpr } },
-                    { description: { $regex: searchRegExpr } },
-                ],
-            }
-        }
-        const products = await Product.find(filter)
-            .limit(limit)
-            .skip((page - 1) * limit)
-            .sort({ createdAt: -1 })
-
-        const count = await Product.find().countDocuments()
-        return successResponse(res, {
-            statusCode: 201,
-            message: 'Searched products returned successfully!'
-        },
-            {
-                products,
-                totalPages: Math.ceil(count / limit),
-                currentPage: page,
-                previousPage: page - 1,
-                nextPage: page + 1,
-                totalNumberOfProducts: count,
-            }
-        )
-    } catch (error) {
-        next(error)
-    }
-}
-
 const filterProducts = async (req, res, next) => {
     try {
         const { price, name, category } = req.body
         const filter = {}
 
         if (price && price.length) {
-            console.log(price)
-            // const priceArray = JSON.parse(price)
             filter.price = { $gte: price[0], $lte: price[1] }
 
         }
@@ -211,4 +168,4 @@ const filterProducts = async (req, res, next) => {
 }
 
 
-module.exports = { getAllProducts, getSingleProduct, createProduct, updateProduct, deleteProduct, searchProducts, filterProducts }
+module.exports = { getAllProducts, getSingleProduct, createProduct, updateProduct, deleteProduct, filterProducts }

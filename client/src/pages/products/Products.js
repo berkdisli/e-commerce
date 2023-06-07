@@ -8,7 +8,7 @@ import { getAllProducts } from '../../services/ProductService';
 import { theme } from '../../layout/Theme'
 import Product from './Product';
 
-import { Button, Card, Checkbox, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
+import { Button, Card, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 
@@ -30,7 +30,7 @@ const Products = () => {
 
 
     const handleFilter = (event) => {
-        setFilterBody({ ...filterBody, [event.target.name]: event.target.name === 'price' ? event.target.value.split('-').map(price => Number(price)) : event.target.value })
+        setFilterBody({ ...filterBody, [event.target.name]: event.target.name === 'price' && 'name' ? event.target.value.split('-').map(price => Number(price), name => name) : event.target.value })
     }
 
     const applyFilter = (event) => {
@@ -43,12 +43,6 @@ const Products = () => {
         setProducts(filterProducts)
     }, [filterProducts]
     )
-
-
-
-    // useEffect(() => {
-    //     fetchAllProducts()
-    // }, [])
 
     const handleBackClick = () => {
         navigate(-1);
@@ -71,6 +65,7 @@ const Products = () => {
                                 name="price"
                                 onChange={handleFilter}
                             >
+                                <FormControlLabel value="0-1000" name="price" control={<Radio />} label="all products" />
                                 <FormControlLabel value="0-50" name="price" control={<Radio />} label="0-50€" />
                                 <FormControlLabel value="50-100" name="price" control={<Radio />} label="50€-100€" />
                                 <FormControlLabel value="100-200" name="price" control={<Radio />} label="100€-200€" />
@@ -78,32 +73,13 @@ const Products = () => {
                                 <FormControlLabel value="500-1000" name="price" control={<Radio />} label="500€-1000€" />
                             </RadioGroup>
 
-                            {/* <FormLabel id="filter">Filter By Gender<hr /></FormLabel>
-                        <RadioGroup
-                            aria-labelledby="filter"
-                            defaultValue="minimum"
-                            name="gender"
-                            onChange={handleFilter}
-                        >
-                            <FormControlLabel value="Men" control={<Checkbox />} label="Men" />
-                            <FormControlLabel value="Women" control={<Checkbox />} label="Women" />
-                            <FormControlLabel value="Kids" control={<Checkbox />} label="Kids" />
-                        </RadioGroup>
-
-                        <FormLabel id="filter">Filter By Size<hr /></FormLabel>
-                        <RadioGroup
-                            aria-labelledby="filter"
-                            defaultValue="minimum"
-                            name="size"
-                            onChange={handleFilter}
-                        >
-                            <FormControlLabel value="XSmall" control={<Checkbox />} label="XSmall" />
-                            <FormControlLabel value="Small" control={<Checkbox />} label="Small" />
-                            <FormControlLabel value="Medium" control={<Checkbox />} label="Medium" />
-                            <FormControlLabel value="Large" control={<Checkbox />} label="Large" />
-                            <FormControlLabel value="XLarge" control={<Checkbox />} label="XLarge" />
-                        </RadioGroup> */}
-
+                            <FormLabel id="filter">Filter By Name<hr /></FormLabel>
+                            <textarea
+                                aria-labelledby="filter"
+                                name="name"
+                                onChange={handleFilter}
+                                placeholder='Search...'
+                            />
                             <Button
                                 type="submit"
                                 variant="contained"
