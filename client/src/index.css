@@ -64,3 +64,41 @@ td {
 .cart {
   margin-top: 20px;
 }
+
+.footer {
+  min-height: 10vh;
+  display: grid;
+  grid-template: 1fr 3fr 1fr;
+  gap: 1rem;
+  background-color: #ffffff;
+  color: rgb(187, 184, 184);
+  font-size: 1.6rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.footer-center {
+  grid-column: 1 / span 2;
+  grid-row: 2;
+}
+
+.footer > .footer-center {
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer > div {
+  gap: 1rem;
+}
+
+.footer a {
+  color: rgb(187, 184, 184) rgb(13, 197, 136);
+}
+
+.footer a:visited {
+  color: rgb(187, 184, 184);
+}
+
+.footer a:hover {
+  color: #27b1c4;
+}

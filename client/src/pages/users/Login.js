@@ -1,11 +1,8 @@
 import { useState } from "react";
 
-import Input from "../Input"
 import { loginUser } from "../../services/UserService"
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { admin, login } from "../../features/userSlice";
 import { theme } from '../../layout/Theme'
 
 import { Avatar, Box, Button, Container, CssBaseline, Grid, TextField, Typography } from '@mui/material';

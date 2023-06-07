@@ -7,6 +7,9 @@ import { useDispatch } from "react-redux";
 import { logout } from "../../features/userSlice";
 import { deleteUser, getUserProfile } from "../../services/UserService";
 
+import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, Divider, Grid, Link, TextField, Typography } from '@mui/material'
+
+
 const UserProfile = () => {
     const dispatch = useDispatch()
     const [user, setUser] = useState([])
@@ -36,14 +39,28 @@ const UserProfile = () => {
         navigate(`/update/${id}`)
     }
     return (
-        <div className="user-info">
-            <h1>Hello, {user.name}</h1>
-            <p>E-mail: {user.email}</p>
-            <p>Age: {user.age}</p>
-            <p>Phone: {user.phone}</p>
-            <button onClick={handleDelete}><FaTrash /></button>
-            <button onClick={handleUpdate}><FaPencilAlt /></button>
-        </div>
+        <Grid container spacing={2} justifyContent="center" alignItems="center">
+            <Grid item xs={12} sm={8} md={6} lg={3}>
+                <Card sx={{ width: '300px', mt: 10, alignItems: 'center', }}>
+                    <CardContent>
+                        <Typography variant="h5" component="div">
+                            <h2>{user.name}</h2>
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            <p>E-mail: {user.email}</p>
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            <p>Age: {user.age}</p>
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            <p>Phone: {user.phone}</p>
+                        </Typography>
+                        <button onClick={handleDelete}><FaTrash /></button>
+                        <button onClick={handleUpdate}><FaPencilAlt /></button>
+                    </CardContent>
+                </Card>
+            </Grid>
+        </Grid>
     )
 }
 
