@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { Link } from 'react-router-dom';
+
 import { registerUser } from "../../services/UserService";
+import { theme } from '../../layout/Theme'
+
+import { Avatar, Box, Button, Container, CssBaseline, Grid, TextField, Typography } from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { ThemeProvider } from '@mui/material/styles';
+
 
 const Register = () => {
 
@@ -55,85 +63,120 @@ const Register = () => {
         }
     };
     return (
-        <div>
-            <h1>Register</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="name">Name</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={name}
-                        onChange={handleNameChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        type="text"
-                        id="email"
-                        name="email"
-                        value={email}
-                        onChange={handleEmailChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={password}
-                        onChange={handlePasswordChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="age">Age</label>
-                    <input
-                        type="age"
-                        id="age"
-                        name="age"
-                        value={age}
-                        onChange={handleAgeChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="phone">Phone number</label>
-                    <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        pattern="[+]{1}[0-9]{11,14}"
-                        value={phone}
-                        onChange={handlePhoneChange}
-                        required
-                    />
-                </div>
-                <input
-                    type="file"
-                    name="image"
-                    onChange={handleImageChange}
-                    accept="image/*"
-                    required
-                />
-                {image && (
-                    <div>
-                        <img
-                            className="user_img"
-                            src={URL.createObjectURL(image)}
-                            alt="user"
-                        />
-                    </div>
-                )}
-                <button type="submit">Register</button>
-            </form>
-        </div>
-    );
-};
-
+        <ThemeProvider theme={theme}>
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <Box
+                    sx={{
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Register
+                    </Typography>
+                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }} >
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    autoComplete="given-name"
+                                    name="name"
+                                    required
+                                    fullWidth
+                                    id="firstName"
+                                    label="Name"
+                                    autoFocus
+                                    onChange={handleNameChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    id="email"
+                                    label="Email Address"
+                                    name="email"
+                                    autoComplete="email"
+                                    onChange={handleEmailChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="age"
+                                    label="Age"
+                                    type="age"
+                                    id="age"
+                                    autoComplete="age"
+                                    onChange={handleAgeChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    id="password"
+                                    autoComplete="new-password"
+                                    onChange={handlePasswordChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="phone"
+                                    label="Phone Number"
+                                    type="number"
+                                    id="phone"
+                                    autoFocus
+                                    onChange={handlePhoneChange}
+                                />
+                            </Grid>
+                            <input
+                                type="file"
+                                name="image"
+                                onChange={handleImageChange}
+                                accept="image/*"
+                                required
+                            />
+                            {image && (
+                                <div>
+                                    <img
+                                        className="user_img"
+                                        src={URL.createObjectURL(image)}
+                                        alt="user"
+                                    />
+                                </div>
+                            )}
+                        </Grid>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            Register
+                        </Button>
+                        <Grid container justifyContent="flex-end">
+                            <Grid item>
+                                <Link to="/login" >
+                                    <p> Already have an account? Then Login!</p>
+                                </Link>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </Box>
+            </Container>
+        </ThemeProvider>
+    )
+}
 export default Register;
