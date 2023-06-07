@@ -3,19 +3,21 @@ import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom'
 
 import { useAppDispatch } from '../../app/hooks';
-import { filter } from '../../features/productSlice';
+import { filter, selectProducts } from '../../features/productSlice';
 import { getAllProducts } from '../../services/ProductService';
 import { theme } from '../../layout/Theme'
 import Product from './Product';
 
 import { Button, Card, Checkbox, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
+import { useSelector } from 'react-redux';
 
 const Products = () => {
     const navigate = useNavigate()
     const dispatch = useAppDispatch();
     const [products, setProducts] = useState([{ _id: '' }])
     const [filterBody, setFilterBody] = useState({});
+    const filterProducts = useSelector(selectProducts)
 
     const fetchAllProducts = async () => {
         const result = await getAllProducts();
@@ -28,14 +30,25 @@ const Products = () => {
 
 
     const handleFilter = (event) => {
-        setFilterBody({ ...filterBody, [event.target.name]: event.target.name === 'price' ? event.target.value.split('-') : event.target.value })
+        setFilterBody({ ...filterBody, [event.target.name]: event.target.name === 'price' ? event.target.value.split('-').map(price => Number(price)) : event.target.value })
     }
 
     const applyFilter = (event) => {
         event.preventDefault();
-        console.log(filterBody)
-        dispatch(filter(filterBody.product))
+        dispatch(filter(filterBody))
     }
+
+    useEffect(() => {
+        console.log(filterProducts)
+        setProducts(filterProducts)
+    }, [filterProducts]
+    )
+
+
+
+    // useEffect(() => {
+    //     fetchAllProducts()
+    // }, [])
 
     const handleBackClick = () => {
         navigate(-1);

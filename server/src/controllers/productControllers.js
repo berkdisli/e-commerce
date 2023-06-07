@@ -185,7 +185,10 @@ const filterProducts = async (req, res, next) => {
         const filter = {}
 
         if (price && price.length) {
+            console.log(price)
+            // const priceArray = JSON.parse(price)
             filter.price = { $gte: price[0], $lte: price[1] }
+
         }
 
         if (name) {

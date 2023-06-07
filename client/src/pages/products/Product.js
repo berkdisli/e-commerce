@@ -1,16 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import { addToCart, addToFavorite, removeFromFavorite } from '../../features/productSlice';
+import { addToCart, addToFavorite, removeFromFavorite, removeFromCart } from '../../features/productSlice';
 import { deleteProduct } from '../../services/ProductService';
 import { useAppDispatch } from '../../app/hooks';
 import { theme } from '../../layout/Theme'
 
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
+import { CardActions, Card, CardContent, CardMedia, Typography } from '@mui/material';
+
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import DeleteForever from '@mui/icons-material/DeleteForever'
 import Edit from '@mui/icons-material/Edit'
@@ -38,8 +35,16 @@ const Product = (props) => {
         dispatch(addToFavorite(_id))
     }
 
+    const removeFavorite = () => {
+        dispatch(removeFromFavorite(_id))
+    }
+
     const handleCart = () => {
         dispatch(addToCart(product))
+    }
+
+    const removeCart = () => {
+        dispatch(removeFromCart(product))
     }
 
     const handleDelete = async () => {

@@ -53,7 +53,7 @@ export const productSlice = createSlice({
         });
 
         builder.addCase(filter.fulfilled, (state, action) => {
-            state.all_products = action.payload
+            state.all_products = action.payload.payload.products
         });
         builder.addCase(filter.pending, (state, action) => {
             state.all_products = []
@@ -66,3 +66,4 @@ export const productSlice = createSlice({
 
 export const { addToCart, removeFromCart, removeProduct, addToFavorite, removeFromFavorite } = productSlice.actions
 export default productSlice.reducer
+export const selectProducts = (state) => state.product.all_products;
