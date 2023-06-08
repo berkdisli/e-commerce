@@ -1,8 +1,13 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { Helmet } from 'react-helmet';
 
 import { getUserProfile, updateUser } from "../../services/UserService";
+import { theme } from '../../layout/Theme'
+
+import { Box, Button, Card, CardContent, Container, CssBaseline, Grid, TextField, Typography } from '@mui/material'
+import { ThemeProvider } from '@mui/material/styles';
 
 const UpdateUser = () => {
     const navigate = useNavigate()
@@ -11,7 +16,8 @@ const UpdateUser = () => {
     const [newUser, setNewUser] = useState({
         name: '',
         email: '',
-        phone: 0
+        phone: 0,
+        age: 0
     });
     const fetchUser = async () => {
         const response = await getUserProfile(id)
@@ -19,7 +25,8 @@ const UpdateUser = () => {
         setNewUser({
             name: response.data.payload.user.name,
             email: response.data.payload.user.email,
-            phone: response.data.payload.user.phone
+            phone: response.data.payload.user.phone,
+            age: response.data.payload.user.age
         })
     }
     useEffect(() => {
@@ -41,7 +48,8 @@ const UpdateUser = () => {
             setNewUser({
                 name: '',
                 email: '',
-                phone: 0
+                phone: 0,
+                age: 0
             })
         } catch (error) {
             toast(error.response.data.message)
@@ -55,27 +63,109 @@ const UpdateUser = () => {
 
 
     return (
-        <div className="main row">
-            <button onClick={handleBackClick}>Back</button>
-            <div className="left">
-                <h3>Name: {user.name}</h3>
-                <h3>E-mail: {user.email}</h3>
-                <h3>Phone: {user.phone}</h3>
-            </div>
-            <div className="right">
-                <form action='' onSubmit={handleSubmit}>
-                    <label htmlFor='name'>Name: </label>
-                    <input type='text' required value={newUser.name} onChange={handleChange} name='name' id='name' />
-                    <label htmlFor='email'>E-mail: </label>
-                    <input type='email' required value={newUser.email} onChange={handleChange} name='email' id='email' />
-                    <label htmlFor='phone'>Phone: </label>
-                    <input type='phone' required value={newUser.phone} onChange={handleChange} name='phone' id='phone' />
-                    <button type='submit'>Update</button>
-                </form>
-                <a href='/reset-password' className="reset-update">Update password</a>
-            </div>
-        </div>
-    );
+        <ThemeProvider theme={theme}>
+            <Helmet>
+                <title>Update User Information</title>
+            </Helmet>
+            <Button
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={handleBackClick}
+            >
+                Back
+            </Button>
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <Card>
+                    <CardContent>
+                        <Typography component="h1" variant="h5" align="left" color="text.secondary">
+                            Name: {user.name}
+                        </Typography>
+                        <Typography component="h1" variant="h5" align="left" color="text.secondary">
+                            E-mail: {user.email}
+                        </Typography>
+                        <Typography component="h1" variant="h5" align="left" color="text.secondary">
+                            Age: {user.age}
+                        </Typography>
+                        <Typography component="h1" variant="h5" align="left" color="text.secondary">
+                            Phone Number: {user.phone}
+                        </Typography>
+                    </CardContent>
+                </Card>
+                <Box
+                    sx={{
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Typography component="h1" variant="h5">
+                        Update Your Profile Information
+                    </Typography>
+                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }} >
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    autoComplete="given-name"
+                                    name="name"
+                                    required
+                                    fullWidth
+                                    id="firstName"
+                                    label="Name"
+                                    autoFocus
+                                    onChange={handleChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    id="email"
+                                    label="Email Address"
+                                    name="email"
+                                    autoComplete="email"
+                                    onChange={handleChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="age"
+                                    label="Age"
+                                    type="age"
+                                    id="age"
+                                    autoComplete="age"
+                                    onChange={handleChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="phone"
+                                    label="Phone Number"
+                                    type="number"
+                                    id="phone"
+                                    autoFocus
+                                    onChange={handleChange}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            Update
+                        </Button>
+                    </Box>
+                </Box>
+            </Container>
+        </ThemeProvider>
+    )
 }
 
 export default UpdateUser;

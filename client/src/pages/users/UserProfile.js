@@ -3,11 +3,12 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import { useDispatch } from "react-redux";
+import { Helmet } from 'react-helmet';
 
 import { logout } from "../../features/userSlice";
 import { deleteUser, getUserProfile } from "../../services/UserService";
 
-import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, Divider, Grid, Link, TextField, Typography } from '@mui/material'
+import { Card, CardContent, Grid, Typography } from '@mui/material'
 
 
 const UserProfile = () => {
@@ -33,13 +34,16 @@ const UserProfile = () => {
         await deleteUser(id);
         navigate('/')
         dispatch(logout())
-        toast.success('The Profile was succesfully deleted')
+        toast.success('The Profile was successfully deleted')
     }
     const handleUpdate = () => {
         navigate(`/update/${id}`)
     }
     return (
         <Grid container spacing={2} justifyContent="center" alignItems="center">
+            <Helmet>
+                <title>User Profile</title>
+            </Helmet>
             <Grid item xs={12} sm={8} md={6} lg={3}>
                 <Card sx={{ width: '300px', mt: 10, alignItems: 'center', }}>
                     <CardContent>
@@ -55,8 +59,8 @@ const UserProfile = () => {
                         <Typography variant="body2" color="text.secondary">
                             <p>Phone: {user.phone}</p>
                         </Typography>
-                        <button onClick={handleDelete}><FaTrash /></button>
-                        <button onClick={handleUpdate}><FaPencilAlt /></button>
+                        <button onClick={handleDelete} style={{ cursor: "pointer" }}><FaTrash /></button>
+                        <button onClick={handleUpdate} style={{ cursor: "pointer" }}><FaPencilAlt /></button>
                     </CardContent>
                 </Card>
             </Grid>

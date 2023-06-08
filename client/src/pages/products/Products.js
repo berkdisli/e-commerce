@@ -8,7 +8,7 @@ import { getAllProducts } from '../../services/ProductService';
 import { theme } from '../../layout/Theme'
 import Product from './Product';
 
-import { Button, Card, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
+import { Button, Card, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Text, TextField } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 
@@ -50,11 +50,16 @@ const Products = () => {
 
     return (
         <ThemeProvider theme={theme}>
+            <Button
+                variant="contained"
+                onClick={handleBackClick}
+            >
+                Back
+            </Button>
             <div className='products'>
                 <Helmet>
                     <title>Products Page</title>
                 </Helmet>
-                <button onClick={handleBackClick}>Back</button>
                 <form onSubmit={applyFilter}>
                     <Card sx={{ minWidth: 200, minHeight: 500 }}>
                         <FormControl >
@@ -72,21 +77,23 @@ const Products = () => {
                                 <FormControlLabel value="200-500" name="price" control={<Radio />} label="200€-500€" />
                                 <FormControlLabel value="500-1000" name="price" control={<Radio />} label="500€-1000€" />
                             </RadioGroup>
-
-                            <FormLabel id="filter">Filter By Name<hr /></FormLabel>
-                            <textarea
-                                aria-labelledby="filter"
-                                name="name"
-                                onChange={handleFilter}
-                                placeholder='Search...'
-                            />
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                            >
-                                Apply
-                            </Button>
+                            <RadioGroup>
+                                <FormLabel id="filter">Filter By Name<hr /></FormLabel>
+                                <TextField
+                                    label="Search"
+                                    name="filter"
+                                    placeholder='Search...'
+                                    type="string"
+                                    onChange={handleFilter}
+                                />
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                >
+                                    Apply
+                                </Button>
+                            </RadioGroup>
                         </FormControl>
                     </Card>
                 </form>
