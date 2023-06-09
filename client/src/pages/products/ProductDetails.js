@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { getSingleProduct } from '../../services/ProductService';
 import { theme } from '../../layout/Theme'
 
-import { Box, Button, Card, CardContent, Container, CssBaseline, Grid, TextField, Typography } from '@mui/material'
+import { Box, Button, Card, CardContent, Typography } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles';
 
 const ProductDetails = () => {

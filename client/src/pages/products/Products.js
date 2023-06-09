@@ -8,7 +8,7 @@ import { getAllProducts } from '../../services/ProductService';
 import { theme } from '../../layout/Theme'
 import Product from './Product';
 
-import { Button, Card, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Text, TextField } from '@mui/material';
+import { Button, Card, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 
@@ -81,7 +81,7 @@ const Products = () => {
                                 <FormLabel id="filter">Filter By Name<hr /></FormLabel>
                                 <TextField
                                     label="Search"
-                                    name="filter"
+                                    name="name"
                                     placeholder='Search...'
                                     type="string"
                                     onChange={handleFilter}

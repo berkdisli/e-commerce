@@ -34,7 +34,8 @@ export const productSlice = createSlice({
             state.favorite = state.favorite.map((favorite) => favorite._id !== action.payload._id)
         },
         addToCart: (state, action) => {
-            state.cart.push(action.payload)
+            state.cart = [...state.cart, action.payload]
+            console.log(action.payload)
         },
         removeFromCart: (state, action) => {
             state.cart = state.cart.filter((c) => c._id !== action.payload._id)

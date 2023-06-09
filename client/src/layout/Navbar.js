@@ -1,10 +1,10 @@
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as MyLink } from 'react-router-dom';
 
 import { logoutUser } from '../services/UserService';
 import { theme } from './Theme'
 
-import { AppBar, Link, Box, Toolbar, Typography, Badge, Button, IconButton, Input } from '@mui/material';
+import { AppBar, Link, Box, Toolbar, Typography, Badge, Button, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FavoriteIcon from '@mui/icons-material/Favorite'
@@ -12,9 +12,7 @@ import { ThemeProvider } from '@mui/material/styles';
 
 const Navbar = () => {
     const navigate = useNavigate()
-
-
-    const isLoggedIn = localStorage.getItem("_id")
+    const isLoggedIn = localStorage.getItem("_id") ? true : false;
     const { favorite, cart } = useSelector((state) => state.product);
 
     const handleLogout = async () => {
@@ -40,7 +38,6 @@ const Navbar = () => {
                         >
                             <MenuIcon />
                         </IconButton>
-
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             e-commerce
                         </Typography>
@@ -50,7 +47,9 @@ const Navbar = () => {
                         </Link>
                         {isLoggedIn ? (
                             <>
-                                <Button style={{ color: '#fff' }} onClick={handleLogout}>Logout</Button>
+                                <Link href='/'>
+                                    <Button style={{ color: '#fff' }} onClick={handleLogout}>Logout</Button>
+                                </Link>
                                 <Link href="/profile">
                                     <Button style={{ color: '#fff' }}>Profile</Button>
                                 </Link>
@@ -88,12 +87,11 @@ const Navbar = () => {
                             aria-label="change me"
                             color="#ffffff" >
                             <Badge badgeContent={cart.length} color="primary">
-                                <Link href="/cart">
+                                <MyLink to="/cart">
                                     <ShoppingCartIcon style={{ color: '#fff' }} />
-                                </Link>
+                                </MyLink>
                             </Badge>
                         </IconButton>
-
                     </Toolbar>
                 </AppBar>
             </Box>

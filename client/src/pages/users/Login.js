@@ -24,12 +24,12 @@ function Login() {
         event.preventDefault();
         try {
             const response = await loginUser(value);
+            console.log(response)
             toast(response.data.message)
-            navigate("/profile");
-            if (response?.user) {
-                localStorage.setItem("_id", response?.user.id);
+            if (response.data.payload.user._id) {
+                localStorage.setItem("_id", response.data.payload.user._id);
             }
-
+            navigate('/profile')
         } catch (error) {
             toast('signin failed An error occurred');
         }

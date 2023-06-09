@@ -1,22 +1,13 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { createProduct, updateProduct } from '../../services/ProductService';
-import { allCategories } from '../../features/categorySlice';
 import { theme } from '../../layout/Theme'
-
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { ThemeProvider } from '@mui/material/styles';
-import { FormLabel, Input, MenuItem, Select } from '@mui/material';
 import { getAllCategories } from '../../services/CategoryService';
+
+import { Box, Button, Container, CssBaseline, FormLabel, Grid, Input, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { ThemeProvider } from '@mui/material/styles';
 
 export const CreateProduct = () => {
     const { slug } = useParams();

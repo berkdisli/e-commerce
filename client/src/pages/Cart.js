@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 const Cart = () => {
     const { cart } = useSelector((state) => state.product);
     const [eCart, seteCart] = useState([])
+    console.log(cart)
 
     useEffect(() => {
         seteCart(cart.map((c) => {
@@ -22,6 +23,7 @@ const Cart = () => {
         }))
     }, [cart]);
 
+    console.log(cart)
     const total = eCart.reduce((partialSum, a) => partialSum + a.price, 0);
     const dispatch = useAppDispatch();
 
