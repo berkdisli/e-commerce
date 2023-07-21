@@ -39,17 +39,17 @@ const Navbar = () => {
                             <MenuIcon />
                         </IconButton>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                            e-commerce
+                            Shop&Go!
                         </Typography>
 
                         <Link href="/">
                             <Button style={{ color: '#fff' }}>Home</Button>
                         </Link>
+                        <Link href="/products">
+                            <Button style={{ color: '#fff' }}>Products</Button>
+                        </Link>
                         {isLoggedIn ? (
                             <>
-                                <Link href='/'>
-                                    <Button style={{ color: '#fff' }} onClick={handleLogout}>Logout</Button>
-                                </Link>
                                 <Link href="/profile">
                                     <Button style={{ color: '#fff' }}>Profile</Button>
                                 </Link>
@@ -59,8 +59,10 @@ const Navbar = () => {
                                 <Link href="/admin/createCategory">
                                     <Button style={{ color: '#fff' }}>Create Category</Button>
                                 </Link>
+                                <Link href='/'>
+                                    <Button style={{ color: '#fff' }} onClick={handleLogout}>Logout</Button>
+                                </Link>
                             </>
-
                         ) : (
                             <>
                                 <Link href="/register">
@@ -71,9 +73,7 @@ const Navbar = () => {
                                 </Link>
                             </>
                         )}
-                        <Link href="/products">
-                            <Button style={{ color: '#fff' }}>Products</Button>
-                        </Link>
+
                         <IconButton
                             size="large"
                             aria-label="change me"

@@ -11,36 +11,28 @@ const { successResponse } = require('../helpers/responseHandler');
 
 const updateUser = async (req, res) => {
     try {
-        const hashedPassword = await generateHashPassword(req.body.password)
-        const updatedData = await User.findByIdAndUpdate(req.params.id,
-            { ...req.body, password: hashedPassword },
+        const id = req.params._id
+        const updatedData = await User.findByIdAndUpdate(
+            id,
             { new: true }
-        );
+        )
 
         if (!updatedData) {
-            return res.status(400).json({
-                ok: false,
-                message: `the user couldn't be updated`,
-                data: updatedData
-            });
+            throw createError(403, 'invalid user')
         }
-
-        if (req.files.image) {
-            const { image } = req.files;
-            updatedData.image.data = fs.readFileSync(image.path);
-            updatedData.image.contentType = image.type;
-        }
-        await updatedData.save();
-        successResponse(res, {
-            statusCode: 201,
-            message: "the user was successfully updated",
-        });
+        await updatedData.save()
+        return res
+            .status(200)
+            .json({
+                message: 'user was updated successfully',
+                updatedData
+            })
     } catch (err) {
         res.status(500).json({
             message: err.message
         });
     }
-};
+}
 
 const deleteUser = async (req, res) => {
     try {

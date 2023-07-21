@@ -5,7 +5,7 @@ const userRouter = express.Router();
 const upload = require("../middlewares/upload")
 
 userRouter.route("/:_id")
-    .put(upload.single("image"), updateUser)
+    .put(updateUser)
     .delete(deleteUser);
 
 userRouter.post("/register", upload.single("image"), registerUser);
